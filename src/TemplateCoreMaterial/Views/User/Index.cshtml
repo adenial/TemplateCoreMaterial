@@ -1,0 +1,70 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Authorization
+@model IEnumerable<UserIndexViewModel>
+@inject IAuthorizationService AuthorizationService
+@inject IViewLocalizer Localizer
+
+@{
+  ViewData["Title"] = Localizer["Users"];
+}
+
+<h2>@Localizer["Users"]</h2>
+
+@if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+{
+  <div class="col-sm-12 text-right">
+    <a asp-action="Create"><i class="fa fa-plus"></i></a>
+  </div>
+}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>
+        @Localizer["Name"]
+      </th>
+      <th>
+        @Localizer["Username"]
+      </th>
+      <th>
+        @Localizer["Email"]
+      </th>
+      <th>
+        @Localizer["Roles"]
+      </th>
+      <th>
+        @Localizer["Actions"]
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+          @Html.DisplayFor(model => item.UserName)
+        </td>
+        <td>
+          @Html.DisplayFor(model => item.Email)
+        </td>
+        <td>
+          @Html.DisplayFor(model => item.Roles)
+        </td>
+        <td>
+          @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
+          {
+            <a class="btn btn-circle btn-icon-only red" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = item.Id })'><i class="fa fa-pencil-square-o"></i></a>
+          }
+
+          @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
+          {
+          <a class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "User", new { id = item.Id })'><i class="fa fa-trash"></i></a>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

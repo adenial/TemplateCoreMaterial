@@ -1,0 +1,171 @@
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@using Microsoft.AspNetCore.Mvc.Localization
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IViewLocalizer Localizer
+
+@{
+  ViewData["Title"] = Localizer["Log in"];
+  Layout = "_LayoutWithoutNavigation";
+}
+
+@*<h2>@ViewData["Title"].</h2>*@
+
+<!-- Wide card with share menu button -->
+<style>
+  .demo-card-wide.mdl-card 
+  {
+    width: 650px;
+  }
+
+  .demo-card-wide > .mdl-card__title 
+  {
+    color: #000000;
+    height: 60px;
+  }
+
+  .demo-card-wide > .mdl-card__menu 
+  {
+    color: #fff;
+  }
+
+  .error-validation
+  {
+    color: crimson;
+  }
+</style>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<div class="mdl-grid">
+  <div class="mdl-layout-spacer"></div>
+  <div class="mdl-cell mdl-cell--4-col">
+    <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+      <div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+          <label class="mdl-textfield__label" for="UserName">@Localizer["Username"]</label>
+          <input asp-for="UserName" type="text" id="UserName" class="mdl-textfield__input"/>
+          <span asp-validation-for="UserName" class="error-validation"></span>
+        </div>
+      </div>
+      <br />
+      <div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+          <label class="mdl-textfield__label" for="Password" >@Localizer["Password"]</label>
+          <input asp-for="Password" type="password" id="Password" class="mdl-textfield__input"/>
+          <span asp-validation-for="Password" class="error-validation"></span>      
+        </div>
+      </div>
+      <br />
+      <div class="mdl-textfield--align-right">
+        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+          @Localizer["Log in"]
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="mdl-layout-spacer"></div>
+</div>
+
+@*<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--4-col"></div>
+  <div class="mdl-cell mdl-cell--4-col">
+    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">@ViewData["Title"]</h2>
+      </div>
+
+      <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+        <div>
+          <div>
+            <label>@Localizer["Username"]</label>
+            <input asp-for="UserName" type="text" id="UserName" class="mdl-textfield__input" />
+            <span asp-validation-for="UserName" class="error-validation"></span>
+          </div>
+        </div>
+        <br />
+        <div>
+          <div>
+            <label>@Localizer["Password"]</label>
+            <input asp-for="Password" type="password" id="Password" class="mdl-textfield__input" />
+            <span asp-validation-for="Password" class="error-validation"></span>
+          </div>
+        </div>
+
+        <div class="mdl-card__actions mdl-card--border">
+          <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            @Localizer["Log in"]
+          </button>
+        </div>
+      </form>
+      <div class="mdl-card__menu">
+        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+          <i class="material-icons">share</i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mdl-cell mdl-cell--4-col"></div>
+</div>*@
+
+@*<div class="row">
+    <div>
+      <section>
+        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+          <h4>@Localizer["Use a local account to log in."]</h4>
+          <hr />
+          <div asp-validation-summary="All" class="text-danger"></div>
+          <div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <label class="mdl-textfield__label" for="UserName">@Localizer["Username"]</label>
+              @Html.TextBoxFor(x => x.UserName, new { @class = "mdl-textfield__input", type = "text", id = "UserName" })
+            </div>
+          </div>
+          <div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input asp-for="Password" type="password" id="Password" class="mdl-textfield__input" />
+              <label class="mdl-textfield__label" for="Password">@Localizer["Password"]</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <div class="checkbox">
+                <label asp-for="RememberMe">
+                  <input asp-for="RememberMe" />
+                  @Localizer["Remember me?"]
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                @Localizer["Log in"]
+              </button>
+            </div>
+          </div>
+          <p>
+          </p>
+        </form>
+      </section>
+    </div>
+    <div>
+    </div>
+  </div>*@
+
+@section Scripts {
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

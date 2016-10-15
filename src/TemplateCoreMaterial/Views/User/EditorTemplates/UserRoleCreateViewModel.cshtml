@@ -1,0 +1,14 @@
+@model UserRoleCreateViewModel
+
+@*@Html.HiddenFor(model => model.Id)*@
+<tr>
+  <td>
+    @Html.CheckBoxFor(model => model.Check)
+  </td>
+  <td>
+    @Html.DisplayFor(model => model.Name)
+  </td>
+  <td>
+    @Html.HiddenFor(model => model.Id)
+  </td>
+</tr>

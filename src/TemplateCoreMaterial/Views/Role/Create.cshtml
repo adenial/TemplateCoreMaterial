@@ -1,0 +1,53 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model AdminRoleCreateViewModel
+
+@{
+  ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+  <div class="form-horizontal">
+    @*<h4>AdminRoleCreateViewModel</h4>*@
+    <hr />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+      <label class="col-md-2 control-label">@Localizer["Name"]</label>
+      <div class="col-md-10">
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Create" class="btn btn-default" />
+      </div>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          @Localizer["Check"]
+        </th>
+        <th>
+          @Localizer["Type"]
+        </th>
+        <th>
+          @Localizer["Value"]
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @Html.EditorFor(x => Model.Claims)
+    </tbody>
+  </table>
+</form>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
