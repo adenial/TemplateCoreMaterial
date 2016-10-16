@@ -2,13 +2,13 @@
 
 @*@Html.HiddenFor(model => model.Id)*@
 <tr>
-  <td>
+  <td class="mdl-data-table__cell--non-numeric">
     @Html.CheckBoxFor(model => model.Check)
   </td>
-  <td>
+  <td class="mdl-data-table__cell--non-numeric">
     @Html.DisplayFor(model => model.Name)
   </td>
-  <td>
+  <td class="mdl-data-table__cell--non-numeric">
     @Html.HiddenFor(model => model.Id)
   </td>
 </tr>

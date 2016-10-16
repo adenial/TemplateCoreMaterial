@@ -17,16 +17,23 @@
 
   <environment names="Development">
     <link rel="stylesheet" href="~/css/site.css" />
+    @*<link rel="stylesheet" href="~/lib/material-design-lite/src/animation/_animation.scss" />*@
+
     <!-- Material Design -->
     <link rel="stylesheet" href="~/lib/material-design-lite/material.css" />
 
+    @*<link rel="stylesheet" href="~/lib/scripts/demo.css" />
+    <link rel="stylesheet" href="~/lib/scripts/_animation.scss" />*@
+
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
   </environment>
   <environment names="Staging,Production">
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/material-design-lite/material.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
   </environment>
 </head>
 <body>
@@ -80,6 +87,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/error.js" asp-append-version="true"></script>
     <script src="~/lib/material-design-lite/material.js"></script>
+    <script src="~/lib/scripts/demo.js"></script>
   </environment>
 
   <environment names="Staging,Production">

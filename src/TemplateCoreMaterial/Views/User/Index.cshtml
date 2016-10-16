@@ -8,34 +8,44 @@
   ViewData["Title"] = Localizer["Users"];
 }
 
-@*<h2>@Localizer["Users"]</h2>*@
+<style>
+  .full-width {
+    width: 100%;
+  }
+</style>
 
-@if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
-{
-  <div class="col-sm-12 text-right">
-    <a asp-action="Create"><i class="fa fa-plus"></i></a>
-  </div>
-}
 
 <div class="mdl-grid">
-  <div class="mdl-layout-spacer"></div>
-    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <div class="mdl-cell mdl-cell--12-col full-width">
+    <h4>@Localizer["Users"]</h4>
+  </div>
+  @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+  {
+    <div class="mdl-cell mdl-cell--12-col full-width mdl-textfield--align-right">
+      <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+      <div class="mdl-tooltip" data-mdl-for="add">
+        @Localizer["Add"]
+      </div>
+    </div>
+  }
+  <div class="mdl-cell mdl-cell--12-col">
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width">
       <thead>
         <tr>
-          <th class="mdl-data-table__cell--non-numeric">
-            @Localizer["Name"]
+          <th class="mdl-data-table__cell--non-numeric ">
+            <strong>@Localizer["Name"]</strong>
           </th>
           <th class="mdl-data-table__cell--non-numeric ">
-            @Localizer["Username"]
+            <strong>@Localizer["Username"]</strong>
           </th>
           <th class="mdl-data-table__cell--non-numeric ">
-            @Localizer["Email"]
+            <strong>@Localizer["Email"]</strong>
           </th>
           <th class="mdl-data-table__cell--non-numeric ">
-            @Localizer["Roles"]
+            <strong>@Localizer["Roles"]</strong>
           </th>
           <th class="mdl-data-table__cell--non-numeric ">
-            @Localizer["Actions"]
+            <strong>@Localizer["Actions"]</strong>
           </th>
         </tr>
       </thead>
@@ -58,17 +68,23 @@
             <td class="mdl-data-table__cell--non-numeric">
               @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
               {
-                <a class="btn btn-circle btn-icon-only red" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = item.Id })'><i class="material-icons">mode_edit</i></a>
+                <a id="edit-@item.Id" class="btn btn-circle btn-icon-only red" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = item.Id })'><i class="material-icons">mode_edit</i></a>
+                <div class="mdl-tooltip" data-mdl-for="edit-@item.Id">
+                  @Localizer["Edit"]
+                </div>
               }
 
               @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
               {
-                <a class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "User", new { id = item.Id })'><i class="material-icons">delete_forever</i></a>
+                <a id="delete-@item.Id" class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "User", new { id = item.Id })'><i class="material-icons">delete_forever</i></a>
+                <div class="mdl-tooltip" data-mdl-for="delete-@item.Id">
+                  @Localizer["Delete"]
+                </div>
               }
             </td>
           </tr>
         }
       </tbody>
     </table>
-  <div class="mdl-layout-spacer"></div>
+  </div>
 </div>

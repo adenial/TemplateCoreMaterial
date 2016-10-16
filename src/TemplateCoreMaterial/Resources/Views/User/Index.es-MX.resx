@@ -120,6 +120,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Acciones</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Eliminar</value>
   </data>
