@@ -12,79 +12,107 @@
   .full-width {
     width: 100%;
   }
+
+  .jn {
+    bottom: 0;
+    height: 0;
+    pointer-events: auto;
+    position: absolute;
+    right: 0;
+  }
 </style>
 
 
-<div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--12-col full-width">
-    <h4>@Localizer["Users"]</h4>
-  </div>
-  @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
-  {
-    <div class="mdl-cell mdl-cell--12-col full-width mdl-textfield--align-right">
-      <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
-      <div class="mdl-tooltip" data-mdl-for="add">
-        @Localizer["Add"]
-      </div>
-    </div>
-  }
-  <div class="mdl-cell mdl-cell--12-col">
-    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width">
-      <thead>
-        <tr>
-          <th class="mdl-data-table__cell--non-numeric ">
-            <strong>@Localizer["Name"]</strong>
-          </th>
-          <th class="mdl-data-table__cell--non-numeric ">
-            <strong>@Localizer["Username"]</strong>
-          </th>
-          <th class="mdl-data-table__cell--non-numeric ">
-            <strong>@Localizer["Email"]</strong>
-          </th>
-          <th class="mdl-data-table__cell--non-numeric ">
-            <strong>@Localizer["Roles"]</strong>
-          </th>
-          <th class="mdl-data-table__cell--non-numeric ">
-            <strong>@Localizer["Actions"]</strong>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach (var item in Model)
-      {
-          <tr>
-            <td class="mdl-data-table__cell--non-numeric">
-              @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td class="mdl-data-table__cell--non-numeric">
-              @Html.DisplayFor(model => item.UserName)
-            </td>
-            <td class="mdl-data-table__cell--non-numeric">
-              @Html.DisplayFor(model => item.Email)
-            </td>
-            <td class="mdl-data-table__cell--non-numeric">
-              @Html.DisplayFor(model => item.Roles)
-            </td>
-            <td class="mdl-data-table__cell--non-numeric">
-              @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
-              {
-                <a id="edit-@item.Id" class="btn btn-circle btn-icon-only red" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = item.Id })'><i class="material-icons">mode_edit</i></a>
-                <div class="mdl-tooltip" data-mdl-for="edit-@item.Id">
-                  @Localizer["Edit"]
-                </div>
-              }
 
-              @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
-              {
-                <a id="delete-@item.Id" class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "User", new { id = item.Id })'><i class="material-icons">delete_forever</i></a>
-                <div class="mdl-tooltip" data-mdl-for="delete-@item.Id">
-                  @Localizer["Delete"]
-                </div>
-              }
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+
+
+
+
+<div class="mdl-grid">
+
+  <div class="mdl-cell mdl-cell--2-col"></div>
+  <div class="mdl-cell mdl-cell--8-col">
+
+    <h4>@Localizer["Users"]</h4>
+
+    @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+    {
+      <div class="mdl-textfield--align-right">
+        <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+        <div class="mdl-tooltip" data-mdl-for="add">
+          @Localizer["Add"]
+        </div>
+
+      </div>
+    }
+    <div class="mdl-list mdl-js-list">
+      @foreach (var model in Model)
+      {
+        <div id="itemList-@Html.Raw(model.Id)" class="mdl-list__item js-deletable">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-icon">person</i>
+            @Html.DisplayFor(modelItem => model.Name)
+          </span>
+          <a id="edit-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = model.Id })'><i class="material-icons">mode_edit</i></a>
+          <div class="mdl-tooltip" data-mdl-for="edit-@Html.Raw(model.Id)">
+            @Localizer["Edit"]
+          </div>
+          <a id="delete-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Delete"] onclick="deleteUser('@Html.Raw(model.Id)')"><i class="material-icons">delete_forever</i></a>
+          <div class="mdl-tooltip" data-mdl-for="delete-@Html.Raw(model.Id)">
+            @Localizer["Delete"]
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="mdl-cell mdl-cell--2-col">
+    @*<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">add</i>
+      </button>*@
   </div>
 </div>
+
+
+
+<div class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+
+<script>
+  function deleteUser(id)
+  {
+    var usersUrl = 'api/users';
+    const url = `${usersUrl}/${id}`;
+
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      contentType: "application/json;charset=utf-8",
+      success: function (data)
+      {
+        // removes from DOM.
+        $("#itemList-" + id).remove();
+
+        // show message.
+        // create a proper json to send data.message.
+        ShowSnackBar(data)
+      },
+      error: function (data)
+      {
+        // show error, throw error?
+        // read documentation about web api, throw error.
+        // I think error: is about when the service is not available?
+      }
+    });
+  }
+
+  function ShowSnackBar(message)
+  {
+    var notification = document.querySelector('.mdl-js-snackbar');
+    notification.MaterialSnackbar.showSnackbar(
+    {
+      message: message
+    });
+  }
+</script>

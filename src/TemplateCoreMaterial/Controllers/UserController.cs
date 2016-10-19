@@ -141,25 +141,22 @@ namespace TemplateCoreMaterial.Controllers
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>Redirects to Index Page or HttpNotFound (404).</returns>
+    [HttpDelete]
+    [Route("/api/users/{id}")]
     [Authorize(Policy = "Delete Users")]
     public IActionResult Delete(string id)
     {
-      if (string.IsNullOrWhiteSpace(id))
+      try
       {
-        return this.NotFound();
-      }
-
-      bool userExists = this.userService.Exist(id);
-
-      if (!userExists)
-      {
-        return this.NotFound();
-      }
-      else
-      {
-        // delete and redirect to index.
         this.userService.DeleteById(id);
-        return this.RedirectToAction("Index");
+        string message = this.localizer["User Deleted"];
+        return this.Json(message);
+      }
+      catch
+      {
+        // test when the error is thrown 
+        string message = "Boom!";
+        return this.Json(message);
       }
     }
 

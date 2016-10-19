@@ -123,4 +123,7 @@
   <data name="There's already a user with the provided username." xml:space="preserve">
     <value>Ya existe un usuario con el nombre de usuario proporcionado.</value>
   </data>
+  <data name="User Deleted" xml:space="preserve">
+    <value>Usuario eliminado</value>
+  </data>
 </root>

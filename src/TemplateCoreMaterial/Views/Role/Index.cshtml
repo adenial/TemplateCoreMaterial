@@ -5,35 +5,85 @@
   ViewData["Title"] = Localizer["Roles"];
 }
 
-<h2>@Localizer["Roles"]</h2>
+<style>
+  .full-width {
+    width: 100%;
+  }
+</style>
 
-<div class="col-sm-12 text-right">
-  <a asp-action="Create"><i class="fa fa-plus"></i></a>
+
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--12-col full-width">
+    <h4>@Localizer["Roles"]</h4>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col full-width mdl-textfield--align-right">
+    <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+    <div class="mdl-tooltip" data-mdl-for="add">
+      @Localizer["Add"]
+    </div>
+  </div>
+
+  <div class="mdl-cell mdl-cell--12-col">
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width">
+      <thead>
+        <tr>
+          <th class="mdl-data-table__cell--non-numeric">
+            @Localizer["Name"]
+          </th>
+          <th class="mdl-data-table__cell--non-numeric">
+            @Localizer["Actions"]
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var item in Model)
+        {
+          <tr>
+            <td class="mdl-data-table__cell--non-numeric">
+              @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="mdl-data-table__cell--non-numeric">
+              <a id="delete-@item.Name" title=@Localizer["Delete"] href='@Url.Action("Delete", "Role", new { id = item.Name })'>
+                <i class="material-icons">delete_forever</i>
+              </a>
+              <div class="mdl-tooltip" data-mdl-for="delete-@item.Name">
+                @Localizer["Delete"]
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
-<table class="table">
-  <thead>
-    <tr>
-      <th>
-        @Localizer["Name"]
-      </th>
-      <th>
-        @Localizer["Actions"]
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var item in Model)
-    {
+
+
+
+@*<table class="table">
+    <thead>
       <tr>
-        <td>
-          @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-          <a class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "Role", new { name = item.Name })'>
-            <i class="fa fa-trash"></i>
-          </a>
-        </td>
+        <th>
+          @Localizer["Name"]
+        </th>
+        <th>
+          @Localizer["Actions"]
+        </th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @foreach (var item in Model)
+      {
+        <tr>
+          <td>
+            @Html.DisplayFor(modelItem => item.Name)
+          </td>
+          <td>
+            <a class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "Role", new { name = item.Name })'>
+              <i class="fa fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>*@

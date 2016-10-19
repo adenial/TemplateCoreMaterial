@@ -59,7 +59,9 @@
         </nav>
       </div>
     </header>
-    <div class="mdl-layout__drawer">
+    @*if user is logged, show other links*@
+
+    @*<div class="mdl-layout__drawer">
       <span class="mdl-layout-title">Test</span>
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" href="">Link</a>
@@ -67,14 +69,11 @@
         <a class="mdl-navigation__link" href="">Link</a>
         <a class="mdl-navigation__link" href="">Link</a>
       </nav>
-    </div>
+    </div>*@
     <main class="mdl-layout__content">
       <div class="page-content">
-
         <!-- Your content goes here -->
         @RenderBody()
-
-
       </div>
     </main>
     <footer class="mdl-mini-footer">
@@ -87,7 +86,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/error.js" asp-append-version="true"></script>
     <script src="~/lib/material-design-lite/material.js"></script>
-    <script src="~/lib/scripts/demo.js"></script>
+    <script src="~/js/mdlComponents/components.js"></script>
   </environment>
 
   <environment names="Staging,Production">
