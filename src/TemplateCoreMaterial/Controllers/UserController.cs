@@ -279,10 +279,19 @@ namespace TemplateCoreMaterial.Controllers
     [Authorize(Policy = "View Users")]
     public IActionResult Index()
     {
-      var users = this.userService.GetAll();
+      List<AspNetUser> users = this.userService.GetAll().ToList();
+
+      AspNetUser loggedUser = users.Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
+      users.Remove(loggedUser);
+
+      //users = users.ToList().Remove(
+      //  users.ToList()
+      //  .Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase)));
+
+      var orderUsers = users.OrderBy(x => x.Name);
 
       // create view model.
-      var model = this.GetIndexModelFromUsers(users);
+      var model = this.GetIndexModelFromUsers(orderUsers);
 
       return this.View(model);
     }

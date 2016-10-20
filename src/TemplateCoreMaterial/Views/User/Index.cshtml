@@ -9,76 +9,87 @@
 }
 
 <style>
-  .full-width {
+  .full-width
+  {
     width: 100%;
   }
 
-  .jn {
+  .jn
+  {
     bottom: 0;
     height: 0;
     pointer-events: auto;
     position: absolute;
     right: 0;
   }
+
+  .bottom
+  {
+    bottom: 0px;
+  }
 </style>
-
-
-
-
-
-
 
 <div class="mdl-grid">
 
   <div class="mdl-cell mdl-cell--2-col"></div>
-  <div class="mdl-cell mdl-cell--8-col">
+  <div class="mdl-cell mdl-cell--9-col">
 
     <h4>@Localizer["Users"]</h4>
 
     @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
     {
       <div class="mdl-textfield--align-right">
-        <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
-        <div class="mdl-tooltip" data-mdl-for="add">
-          @Localizer["Add"]
+          <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+          <div class="mdl-tooltip" data-mdl-for="add">
+            @Localizer["Add"]
+          </div>
         </div>
-
-      </div>
     }
-    <div class="mdl-list mdl-js-list">
+    <div class="mdl-list mdl-js-list mdl-shadow--2dp">
       @foreach (var model in Model)
       {
-        <div id="itemList-@Html.Raw(model.Id)" class="mdl-list__item js-deletable">
+        <div id="itemList-@Html.Raw(model.Id)" class="mdl-list__item mdl-list__item--two-line js-deletable">
+
           <span class="mdl-list__item-primary-content">
-            <i class="material-icons mdl-list__item-icon">person</i>
-            @Html.DisplayFor(modelItem => model.Name)
+            <i class="material-icons mdl-list__item-avatar">person</i>
+            <span>@Html.DisplayFor(modelItem => model.Name)</span>
+            <span class="mdl-list__item-sub-title">@Html.DisplayFor(modelItem => model.Email)</span>
           </span>
-          <a id="edit-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = model.Id })'><i class="material-icons">mode_edit</i></a>
-          <div class="mdl-tooltip" data-mdl-for="edit-@Html.Raw(model.Id)">
-            @Localizer["Edit"]
-          </div>
-          <a id="delete-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Delete"] onclick="deleteUser('@Html.Raw(model.Id)')"><i class="material-icons">delete_forever</i></a>
-          <div class="mdl-tooltip" data-mdl-for="delete-@Html.Raw(model.Id)">
-            @Localizer["Delete"]
-          </div>
+
+          @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
+          {
+            <span class="mdl-list__item-secondary-content">
+              <a id="edit-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = model.Id })'><i class="material-icons">mode_edit</i></a>
+              <span class="mdl-tooltip" data-mdl-for="edit-@Html.Raw(model.Id)">
+                @Localizer["Edit"]
+              </span>
+            </span>
+          }
+
+          @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
+          {
+            <span class="mdl-list__item-secondary-content">
+              <a id="delete-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Delete"] onclick="deleteUser('@Html.Raw(model.Id)')"><i class="material-icons">delete_forever</i></a>
+              <span class="mdl-tooltip" data-mdl-for="delete-@Html.Raw(model.Id)">
+                @Localizer["Delete"]
+              </span>
+            </span>
+          }
         </div>
       }
     </div>
   </div>
-  <div class="mdl-cell mdl-cell--2-col">
-    @*<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+
+  <!--//TODO:check class, probably change flex.-->
+  @*<div class="mdl-cell mdl-cell--1-col mdl-cell--bottom">
+    @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+    {
+      <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
         <i class="material-icons">add</i>
-      </button>*@
-  </div>
+      </button>
+    }
+  </div>*@
 </div>
-
-
-
-<div class="mdl-js-snackbar mdl-snackbar">
-  <div class="mdl-snackbar__text"></div>
-  <button class="mdl-snackbar__action" type="button"></button>
-</div>
-
 <script>
   function deleteUser(id)
   {
@@ -96,7 +107,7 @@
 
         // show message.
         // create a proper json to send data.message.
-        ShowSnackBar(data)
+        message(data)
       },
       error: function (data)
       {
@@ -107,9 +118,9 @@
     });
   }
 
-  function ShowSnackBar(message)
+  function message(message)
   {
-    var notification = document.querySelector('.mdl-js-snackbar');
+    var notification = document.querySelector('#snackbar');
     notification.MaterialSnackbar.showSnackbar(
     {
       message: message

@@ -76,9 +76,13 @@
         @RenderBody()
       </div>
     </main>
-    <footer class="mdl-mini-footer">
+    <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    @*<footer class="mdl-mini-footer">
       @await Html.PartialAsync("_Footer")
-    </footer>
+    </footer>*@
   </div>
 
   <environment names="Development">
@@ -86,7 +90,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/error.js" asp-append-version="true"></script>
     <script src="~/lib/material-design-lite/material.js"></script>
-    <script src="~/js/mdlComponents/components.js"></script>
+    <script src="~/js/mdl-components/custom-components.js"></script>
   </environment>
 
   <environment names="Staging,Production">
