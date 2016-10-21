@@ -16,7 +16,8 @@
   <title>@ViewData["Title"] - TemplateCore</title>
 
   <environment names="Development">
-    <link rel="stylesheet" href="~/css/site.css" />
+    @*<link rel="stylesheet" href="~/css/site.css" />*@
+    <link rel="stylesheet" href="~/css/main.css" />
 
     <!-- Material Design -->
     <link rel="stylesheet" href="~/css/mdl/material.css" />
@@ -76,9 +77,9 @@
       <div class="mdl-snackbar__text"></div>
       <button class="mdl-snackbar__action" type="button"></button>
     </div>
-    @*<footer class="mdl-mini-footer">
+    <footer class="mdl-mini-footer">
       @await Html.PartialAsync("_Footer")
-    </footer>*@
+    </footer>
   </div>
 
   <environment names="Development">
@@ -86,7 +87,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/error.js" asp-append-version="true"></script>
     <script src="~/js/mdl/material.js"></script>
-    <script src="~/js/mdl-components/custom-components.js"></script>
+    <script src="~/js/mdl-custom-components/custom-components.js"></script>
   </environment>
 
   <environment names="Staging,Production">
@@ -98,7 +99,7 @@
             asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
     </script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
+    @*<script src="~/js/site.min.js" asp-append-version="true"></script>*@
     <script src="~/js/error.js" asp-append-version="true"></script>
     <script src="~/lib/material-design-lite/material.min.js"></script>
   </environment>

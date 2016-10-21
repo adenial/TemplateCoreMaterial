@@ -16,16 +16,17 @@
   <title>@ViewData["Title"] - TemplateCore</title>
 
   <environment names="Development">
-    <link rel="stylesheet" href="~/css/site.css" />
+    @*<link rel="stylesheet" href="~/css/site.css" />*@
+    <link rel="stylesheet" href="~/css/main.css" />
     <!-- Material Design -->
-    <link rel="stylesheet" href="~/lib/material-design-lite/material.css" />
+    <link rel="stylesheet" href="~/css/mdl/material.css" />
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </environment>
   <environment names="Staging,Production">
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/material-design-lite/material.min.css" />
+    @*<link rel="stylesheet" href="~/lib/material-design-lite/material.min.css" />*@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </environment>
 </head>
@@ -41,28 +42,28 @@
     <footer class="mdl-mini-footer">
       @await Html.PartialAsync("_Footer")
     </footer>
-    </div>
+  </div>
 
-    <environment names="Development">
-      <script src="~/lib/jquery/dist/jquery.js"></script>
-      <script src="~/js/site.js" asp-append-version="true"></script>
-      <script src="~/js/error.js" asp-append-version="true"></script>
-      <script src="~/lib/material-design-lite/material.js"></script>
-    </environment>
+  <environment names="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/error.js" asp-append-version="true"></script>
+    <script src="~/js/mdl/material.js"></script>
+  </environment>
 
-    <environment names="Staging,Production">
-      <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-              asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-              asp-fallback-test="window.jQuery">
-      </script>
-      <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
-              asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-              asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-      </script>
-      <script src="~/js/site.min.js" asp-append-version="true"></script>
-      <script src="~/js/error.js" asp-append-version="true"></script>
-      <script src="~/lib/material-design-lite/material.min.js"></script>
-    </environment>
-    @RenderSection("scripts", required: false)
+  <environment names="Staging,Production">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+    </script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+    <script src="~/js/error.js" asp-append-version="true"></script>
+    <script src="~/lib/material-design-lite/material.min.js"></script>
+  </environment>
+  @RenderSection("scripts", required: false)
 </body>
 </html>

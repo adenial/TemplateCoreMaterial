@@ -1,6 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../gulpfile.js" />
 /// <reference path="js/error.js" />
+/// <reference path="js/mdl/material.js" />
 /// <reference path="js/mdl-custom-components/custom-components.js" />
 /// <reference path="js/site.js" />
 /// <reference path="lib/jquery/dist/jquery.js" />

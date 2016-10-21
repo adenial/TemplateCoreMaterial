@@ -11,49 +11,15 @@
   Layout = "_LayoutWithoutNavigation";
 }
 
-@*<h4>@ViewData["Title"].</h4>*@
-
-<!-- Wide card with share menu button -->
 <style>
-  .demo-card-wide.mdl-card
+  .snippet-group
   {
-    width: 650px;
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0;
   }
-
-  .demo-card-wide > .mdl-card__title
-  {
-    color: #000000;
-    height: 60px;
-  }
-
-  .demo-card-wide > .mdl-card__menu
-  {
-    color: #fff;
-  }
-
-  .text-danger
-  {
-    color: crimson;
-  }
-
-  /*.mdl-layout
-  {
-    align-items: center;
-    justify-content: center;
-  }*/
-
-  /*.mdl-grid-center
-  {
-    align-items: center;
-    justify-content: center;
-  }*/
-  /*.mdl-layout__content
-  {
-    padding: 24px;
-    flex: none;
-  }*/
 </style>
-
+@*<h4>@ViewData["Title"].</h4>*@
 
 
 @*<div class="mdl-grid">
@@ -97,13 +63,12 @@
 </div>*@
 
 
-<div class="mdl-grid">
-    <div class="mdl-layout-spacer"></div>
-    <div class="mdl-cell mdl-cell--4-col">
+<div class="mdl-cell--12-col">
+    <div>
       <div asp-validation-summary="All" class="text-danger"></div>
       <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
         <div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <label class="mdl-textfield__label" for="UserName">@Localizer["Username"]</label>
             <input asp-for="UserName" type="text" id="UserName" class="mdl-textfield__input" />
             <span asp-validation-for="UserName" class="text-danger"></span>
@@ -111,21 +76,20 @@
         </div>
         <br />
         <div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <label class="mdl-textfield__label" for="Password">@Localizer["Password"]</label>
             <input asp-for="Password" type="password" id="Password" class="mdl-textfield__input" />
             <span asp-validation-for="Password" class="text-danger"></span>
           </div>
         </div>
         <br />
-        <div class="mdl-textfield--align-right">
+        <div>
           <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             @Localizer["Log in"]
           </button>
         </div>
       </form>
     </div>
-    <div class="mdl-layout-spacer"></div>
   </div>
 
 
