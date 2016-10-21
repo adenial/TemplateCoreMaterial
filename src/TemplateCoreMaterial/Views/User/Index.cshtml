@@ -9,23 +9,14 @@
 }
 
 <style>
-  .full-width
+  .mdl-list__item
   {
-    width: 100%;
-  }
-
-  .jn
-  {
-    bottom: 0;
-    height: 0;
-    pointer-events: auto;
-    position: absolute;
-    right: 0;
-  }
-
-  .bottom
-  {
-    bottom: 0px;
+    border-collapse: collapse;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    background-color: rgb(255,255,255);
+    white-space: nowrap;
   }
 </style>
 
@@ -39,13 +30,13 @@
     @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
     {
       <div class="mdl-textfield--align-right">
-          <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
-          <div class="mdl-tooltip" data-mdl-for="add">
-            @Localizer["Add"]
-          </div>
+        <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+        <div class="mdl-tooltip" data-mdl-for="add">
+          @Localizer["Add"]
         </div>
+      </div>
     }
-    <div class="mdl-list mdl-js-list mdl-shadow--2dp">
+    <div class="mdl-list mdl-js-list">
       @foreach (var model in Model)
       {
         <div id="itemList-@Html.Raw(model.Id)" class="mdl-list__item mdl-list__item--two-line js-deletable">
@@ -82,13 +73,13 @@
 
   <!--//TODO:check class, probably change flex.-->
   @*<div class="mdl-cell mdl-cell--1-col mdl-cell--bottom">
-    @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
-    {
-      <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons">add</i>
-      </button>
-    }
-  </div>*@
+      @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+      {
+        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons">add</i>
+        </button>
+      }
+    </div>*@
 </div>
 <script>
   function deleteUser(id)
