@@ -30,19 +30,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </environment>
 </head>
-<body>
-  <div class="mdl-layout mdl-js-layout">
-    <main class="mdl-layout__content">
-      <div class="page-content">
+<body>  
+  <!-- Your content goes here -->
+  @RenderBody()
 
-        <!-- Your content goes here -->
-        @RenderBody()
-      </div>
-    </main>
-    <footer class="mdl-mini-footer">
+  @*<footer class="mdl-mini-footer">
       @await Html.PartialAsync("_Footer")
-    </footer>
-  </div>
+    </footer>*@
+
 
   <environment names="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>

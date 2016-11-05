@@ -16,8 +16,7 @@
   <title>@ViewData["Title"] - TemplateCore</title>
 
   <environment names="Development">
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
-    <link rel="stylesheet" href="~/css/main.css" />
+    @*<link rel="stylesheet" href="~/css/site.css" />*@    
 
     <!-- Material Design -->
     <link rel="stylesheet" href="~/css/mdl/material.css" />
@@ -25,12 +24,13 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="~/css/main.css" />
   </environment>
   <environment names="Staging,Production">
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/material-design-lite/material.min.css" />
+    @*<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="~/lib/material-design-lite/material.min.css" />
   </environment>
 </head>
 <body>
@@ -47,12 +47,15 @@
           <a asp-area="" class="mdl-navigation__link" asp-controller="Home" asp-action="Index"><i class="material-icons">home</i> @Localizer["Home"]</a>
           @if (await AuthorizationService.AuthorizeAsync(User, "View Administrator Menu"))
           {
-            <a asp-area="" class="mdl-navigation__link" asp-controller="User" asp-action="Index"><i class="fa fa-users"></i> @Localizer["Users"]</a>
-            <a asp-area="" class="mdl-navigation__link" asp-controller="Role" asp-action="Index"><i class="fa fa-sitemap"></i> @Localizer["Roles"]</a>
-          }
-          <a asp-area="" class="mdl-navigation__link" asp-controller="Home" asp-action="About"><i class="material-icons">search</i> @Localizer["About"]</a>
-          <a asp-area="" class="mdl-navigation__link" asp-controller="Home" asp-action="Contact"><i class="material-icons">mail_outline</i> @Localizer["Contact"]</a>
+            <a asp-area="" class="mdl-navigation__link" asp-controller="User" asp-action="Index"><i class="material-icons">people</i> @Localizer["Users"]</a>
+            <a asp-area="" class="mdl-navigation__link" asp-controller="Role" asp-action="Index"><i class="material-icons">group</i> @Localizer["Roles"]</a>
+          }          
+
+          @*<a asp-area="" class="mdl-navigation__link" asp-controller="Home" asp-action="About"><i class="material-icons">search</i> @Localizer["About"]</a>
+          <a asp-area="" class="mdl-navigation__link" asp-controller="Home" asp-action="Contact"><i class="material-icons">mail_outline</i> @Localizer["Contact"]</a>*@
           @await Html.PartialAsync("_LoginPartial")
+
+          <i class="material-icons">settings</i>
         </nav>
       </div>
     </header>
@@ -67,7 +70,7 @@
         <a class="mdl-navigation__link" href="">Link</a>
       </nav>
     </div>*@
-    <main class="mdl-layout__content">
+    <main class="mdl-layout__content mdl-color--grey-100">
       <div class="page-content">
         <!-- Your content goes here -->
         @RenderBody()
@@ -77,9 +80,9 @@
       <div class="mdl-snackbar__text"></div>
       <button class="mdl-snackbar__action" type="button"></button>
     </div>
-    <footer class="mdl-mini-footer">
+    @*<footer class="mdl-mini-footer">
       @await Html.PartialAsync("_Footer")
-    </footer>
+    </footer>*@
   </div>
 
   <environment names="Development">

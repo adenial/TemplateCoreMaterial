@@ -9,15 +9,39 @@
 }
 
 <style>
+  .button-footer
+  {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    background-color: #FFFFFF;
+    text-align: center;
+  }
+
   .mdl-list__item
   {
     border-collapse: collapse;
-    border: 1px solid rgba(0, 0, 0, 0.12);
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
     background-color: rgb(255,255,255);
     white-space: nowrap;
+    height: 60px;
   }
+
+    .mdl-list__item:first-child
+    {
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .mdl-list__item > button
+    {
+      display: none;
+    }
+
+    .mdl-list__item:hover > button
+    {
+      display: block;
+    }
 </style>
 
 <div class="mdl-grid">
@@ -27,19 +51,22 @@
 
     <h4>@Localizer["Users"]</h4>
 
-    @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
-    {
-      <div class="mdl-textfield--align-right">
-        <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+    @*@if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+      {
+        <div style="text-align: right">
+          <button id="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
+                  onclick="@("window.location.href='" + @Url.Action("Create", "User") + "'");">
+            <i class="material-icons">add</i>
+          </button>
+        </div>
         <div class="mdl-tooltip" data-mdl-for="add">
           @Localizer["Add"]
         </div>
-      </div>
-    }
-    <div class="mdl-list mdl-js-list">
+      }*@
+    <ul class="index-list">
       @foreach (var model in Model)
       {
-        <div id="itemList-@Html.Raw(model.Id)" class="mdl-list__item mdl-list__item--two-line js-deletable">
+        <li id="itemList-@Html.Raw(model.Id)" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
 
           <span class="mdl-list__item-primary-content">
             <i class="material-icons mdl-list__item-avatar">person</i>
@@ -49,37 +76,43 @@
 
           @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
           {
-            <span class="mdl-list__item-secondary-content">
-              <a id="edit-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Edit"] href='@Url.Action("Edit", "User", new { id = model.Id })'><i class="material-icons">mode_edit</i></a>
-              <span class="mdl-tooltip" data-mdl-for="edit-@Html.Raw(model.Id)">
-                @Localizer["Edit"]
-              </span>
+            <button id="edit-@Html.Raw(model.Id)" class="mdl-button mdl-js-button mdl-button--icon" onclick="@("window.location.href='" + @Url.Action("Edit", "User", new {id= model.Id }) + "'");">
+              <i class="material-icons">mode_edit</i>
+            </button>
+
+            <span class="mdl-tooltip" data-mdl-for="edit-@Html.Raw(model.Id)">
+              @Localizer["Edit"]
             </span>
           }
 
           @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
           {
-            <span class="mdl-list__item-secondary-content">
-              <a id="delete-@Html.Raw(model.Id)" class="mdl-list__item-secondary-action" title=@Localizer["Delete"] onclick="deleteUser('@Html.Raw(model.Id)')"><i class="material-icons">delete_forever</i></a>
-              <span class="mdl-tooltip" data-mdl-for="delete-@Html.Raw(model.Id)">
-                @Localizer["Delete"]
-              </span>
+            <button id="delete-@Html.Raw(model.Id)" class="mdl-button mdl-js-button mdl-button--icon" onclick="deleteUser('@Html.Raw(model.Id)')">
+              <i class="material-icons">delete</i>
+            </button>
+
+            <span class="mdl-tooltip" data-mdl-for="delete-@Html.Raw(model.Id)">
+              @Localizer["Delete"]
             </span>
           }
-        </div>
+        </li>
       }
-    </div>
+    </ul>
   </div>
 
   <!--//TODO:check class, probably change flex.-->
-  @*<div class="mdl-cell mdl-cell--1-col mdl-cell--bottom">
-      @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
-      {
-        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-          <i class="material-icons">add</i>
-        </button>
-      }
-    </div>*@
+  <div class="button-footer mdl-color--grey-100">
+    @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
+    {
+      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+              onclick="@("window.location.href='" + @Url.Action("Create", "User") + "'");">
+        <i class="material-icons">add</i>
+      </button>
+      <div class="mdl-tooltip" data-mdl-for="add">
+        @Localizer["Add"]
+      </div>
+    }
+  </div>
 </div>
 <script>
   function deleteUser(id)
