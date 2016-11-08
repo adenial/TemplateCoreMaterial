@@ -72,8 +72,8 @@ namespace TemplateCoreMaterial.Controllers
 
       model.Roles = rolesViewmodel;
 
-      // create view and return the model.
-      return this.View(model);
+      // view without headers, testing.
+      return this.View("CreaUserNoHeader", model);
     }
 
     /// <summary>

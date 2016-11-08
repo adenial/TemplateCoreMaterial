@@ -11,9 +11,10 @@
 <style>
   .button-footer
   {
-    position: absolute;
-    right: 0;
+    position: fixed;
+    right: 20px;
     bottom: 0;
+    /*bottom: 100px;*/
     padding: 1rem;
     background-color: #FFFFFF;
     text-align: center;
@@ -45,24 +46,21 @@
 </style>
 
 <div class="mdl-grid">
-
   <div class="mdl-cell mdl-cell--2-col"></div>
   <div class="mdl-cell mdl-cell--9-col">
 
+    <dialog class="mdl-dialog">
+      @*<h4 class="mdl-dialog__title">Allow data collection?</h4>*@
+      <div id="createContent" class="mdl-dialog__content">
+      </div>
+      <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
+        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button close">Cancel</button>
+      </div>
+    </dialog>
+
     <h4>@Localizer["Users"]</h4>
 
-    @*@if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
-      {
-        <div style="text-align: right">
-          <button id="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
-                  onclick="@("window.location.href='" + @Url.Action("Create", "User") + "'");">
-            <i class="material-icons">add</i>
-          </button>
-        </div>
-        <div class="mdl-tooltip" data-mdl-for="add">
-          @Localizer["Add"]
-        </div>
-      }*@
     <ul class="index-list">
       @foreach (var model in Model)
       {
@@ -100,14 +98,18 @@
     </ul>
   </div>
 
-  <!--//TODO:check class, probably change flex.-->
   <div class="button-footer mdl-color--grey-100">
     @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
     {
-      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
-              onclick="@("window.location.href='" + @Url.Action("Create", "User") + "'");">
+      @*<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+                onclick="@("window.location.href='" + @Url.Action("Create", "User") + "'");">
+          <i class="material-icons">add</i>
+        </button>*@
+
+      <button id="show-dialog" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
         <i class="material-icons">add</i>
       </button>
+
       <div class="mdl-tooltip" data-mdl-for="add">
         @Localizer["Add"]
       </div>
@@ -115,6 +117,39 @@
   </div>
 </div>
 <script>
+
+  var dialog = document.querySelector('dialog');
+
+  var showDialogButton = document.querySelector('#show-dialog');
+  if (!dialog.showModal)
+  {
+    dialogPolyfill.registerDialog(dialog);
+  }
+
+  showDialogButton.addEventListener('click', function ()
+  {
+    // this is causing issues with styles.
+    $('#createContent').load('/User/Create');
+
+    @*$.ajax({
+      type: 'GET',
+      url: '@Url.Content("/User/Create")',
+      success: function (data)
+      {
+        $('#createContent').innerHTML = data;
+      }
+    });*@
+
+    dialog.showModal();
+
+    dialog.style.width = "400px";
+  });
+
+  dialog.querySelector('.close').addEventListener('click', function ()
+  {
+    dialog.close();
+  });
+
   function deleteUser(id)
   {
     var usersUrl = 'api/users';
