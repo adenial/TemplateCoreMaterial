@@ -18,6 +18,9 @@ namespace TemplateCoreMaterial.ViewModels.User
     /// </summary>
     public UserCreateViewModel()
     {
+      //this.UserName = "adenial";
+      //this.Email = "adenialster@gmail.com";
+      //this.Name = "Rolando";
       this.Roles = new List<UserRoleCreateViewModel>();
     }
 

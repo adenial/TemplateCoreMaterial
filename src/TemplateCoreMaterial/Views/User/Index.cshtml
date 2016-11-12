@@ -7,7 +7,7 @@
 @{
   ViewData["Title"] = Localizer["Users"];
 }
-
+<script type="text/javascript" src="~/lib/knockout/dist/knockout.js"></script>
 <style>
   .button-footer
   {
@@ -45,13 +45,105 @@
     }
 </style>
 
+@section scripts
+{
+  <script>
+    var uri = 'api/users';
+    $(document).ready(function ()
+    {
+      var uri = 'api/users';
+      // Send an AJAX request
+      $.ajax(
+      {
+        url: uri,
+        type: 'GET',
+        contentType: "application/json;charset=utf-8",
+        success: function (data)
+        {
+          data.forEach(addUser);
+
+          ko.applyBindings(new ViewModel, document.getElementById('userlist'));
+        },
+        error: function (data)
+        {
+        }
+      });
+
+      function ViewModel()
+      {
+        var self = this;
+        self.userResult = ko.observableArray(users);
+
+        self.refresh = function ()
+        {
+          var data = self.userResult().slice(0);
+          self.userResult([]);
+          self.userResult(data);
+        };
+
+        self.add = function (id, mail, name)
+        {
+          self.userResult().push(new User(id, mail, name))
+          self.refresh()
+        }
+      };
+    });
+  </script>
+}
+
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--2-col"></div>
   <div class="mdl-cell mdl-cell--9-col">
 
     <dialog class="mdl-dialog">
-      @*<h4 class="mdl-dialog__title">Allow data collection?</h4>*@
-      <div id="createContent" class="mdl-dialog__content">
+      <div id="createuserdialog" class="mdl-dialog__content">
+        <div align="center">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            @*name field*@
+            <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
+            <div>
+              <input class="mdl-textfield__input" type="text" id="name" data-bind="value:name()" />
+              <span class="text-danger" />
+            </div>
+          </div>
+        </div>
+        <div align="center">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            @*name field*@
+            <label class="mdl-textfield__label" for="name">@Localizer["Username"]</label>
+            <div>
+              <input class="mdl-textfield__input" type="text" id="username" data-bind="value:username()" />
+              <span class="text-danger" />
+            </div>
+          </div>
+        </div>
+        <div align="center">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            @*name field*@
+            <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
+            <div>
+              <input class="mdl-textfield__input" type="text" id="email" data-bind="value:email()" />
+              <span class="text-danger" />
+            </div>
+          </div>
+        </div>
+
+        @*list with the roles to add to the new user.*@
+        <ul class="demo-list-two mdl-list" data-bind="foreach: roles">
+          <li class="mdl-list__item">
+
+            <span class="mdl-list__item-primary-content">
+              <label data-bind="attr: {'for': 'role' + id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                <input type="checkbox" data-bind="checked: check(), click: seleccionar(id()), attr: {id: 'role' + id()}" class="mdl-checkbox__input" checked />
+              </label>
+            </span>
+
+            <span class="mdl-list__item-secondary-action">
+              <span data-bind="text:name()"></span>
+            </span>
+
+          </li>
+        </ul>
       </div>
       <div class="mdl-dialog__actions">
         <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
@@ -61,40 +153,37 @@
 
     <h4>@Localizer["Users"]</h4>
 
-    <ul class="index-list">
-      @foreach (var model in Model)
-      {
-        <li id="itemList-@Html.Raw(model.Id)" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
+    <ul id="userlist" class="index-list" data-bind="foreach: userResult">
+      <li data-bind="attr: {id: 'itemList-' + id() }" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
 
-          <span class="mdl-list__item-primary-content">
-            <i class="material-icons mdl-list__item-avatar">person</i>
-            <span>@Html.DisplayFor(modelItem => model.Name)</span>
-            <span class="mdl-list__item-sub-title">@Html.DisplayFor(modelItem => model.Email)</span>
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-avatar">person</i>
+          <span data-bind="text:name"></span>
+          <span class="mdl-list__item-sub-title" data-bind="text:email"></span>
+        </span>
+
+        @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
+        {
+          <button data-bind="attr: {id: 'edit-' + id() }, click: redirect" class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">mode_edit</i>
+          </button>
+
+          <span class="mdl-tooltip" data-bind="attr: {'data-mdl-for': 'edit-' + id() }">
+            @Localizer["Edit"]
           </span>
+        }
 
-          @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
-          {
-            <button id="edit-@Html.Raw(model.Id)" class="mdl-button mdl-js-button mdl-button--icon" onclick="@("window.location.href='" + @Url.Action("Edit", "User", new {id= model.Id }) + "'");">
-              <i class="material-icons">mode_edit</i>
-            </button>
+        @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
+        {
+          <button data-bind="attr: {id: 'delete-' + id() }, click: remove" class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">delete</i>
+          </button>
 
-            <span class="mdl-tooltip" data-mdl-for="edit-@Html.Raw(model.Id)">
-              @Localizer["Edit"]
-            </span>
-          }
-
-          @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
-          {
-            <button id="delete-@Html.Raw(model.Id)" class="mdl-button mdl-js-button mdl-button--icon" onclick="deleteUser('@Html.Raw(model.Id)')">
-              <i class="material-icons">delete</i>
-            </button>
-
-            <span class="mdl-tooltip" data-mdl-for="delete-@Html.Raw(model.Id)">
-              @Localizer["Delete"]
-            </span>
-          }
-        </li>
-      }
+          <span class="mdl-tooltip" data-bind="attr: {'data-mdl-for': 'delete-' + id() }">
+            @Localizer["Delete"]
+          </span>
+        }
+      </li>
     </ul>
   </div>
 
@@ -116,7 +205,34 @@
     }
   </div>
 </div>
-<script>
+
+<script type="text/javascript">
+  var users = [];
+  var createUserRoles = [];
+  var createUser;
+
+  function addUser(item, index)
+  {
+    users.push(new User(item.id, item.email, item.name));
+  }
+
+  function User(id, email, name)
+  {
+    var self = this;
+    self.id = ko.observable(id);
+    self.name = ko.observable(name);
+    self.email = ko.observable(email);
+
+    self.redirect = function ()
+    {
+      window.location.href = "User/Edit/" + self.id();
+    }
+
+    self.remove = function ()
+    {
+      deleteUser(self.id());
+    }
+  }
 
   var dialog = document.querySelector('dialog');
 
@@ -128,20 +244,25 @@
 
   showDialogButton.addEventListener('click', function ()
   {
-    // this is causing issues with styles.
-    $('#createContent').load('/User/Create');
-
-    @*$.ajax({
-      type: 'GET',
-      url: '@Url.Content("/User/Create")',
-      success: function (data)
+    var usersUrl = 'api/users/create';
+    $.ajax(
       {
-        $('#createContent').innerHTML = data;
-      }
-    });*@
+        url: usersUrl,
+        type: 'GET',
+        contentType: "application/json;charset=utf-8",
+        success: function (data)
+        {
+          ko.applyBindings(new CreateUserViewModel(data), document.getElementById('createuserdialog'))
+        },
+        error: function (data)
+        {
+        }
+      });
+
+    // after invoking webapi and if success, return json and push it to users.
+    // ko.contextFor(document.getElementById("userlist")).$data.add(data.id, data.email, data.name);
 
     dialog.showModal();
-
     dialog.style.width = "400px";
   });
 
@@ -173,8 +294,43 @@
         // show error, throw error?
         // read documentation about web api, throw error.
         // I think error: is about when the service is not available?
+        message("Error while deleting user")
       }
     });
+  }
+
+  function CreateUserViewModel(data)
+  {
+    var self = this;
+
+    self.name = ko.observable(data.name);
+    self.email = ko.observable(data.email);
+    self.username = ko.observable(data.userName);
+
+    data.roles.forEach(createRoles)
+    self.roles = ko.observableArray(createUserRoles);
+  }
+
+  function createRoles(item, index)
+  {
+    createUserRoles.push(new Role(item.id, item.name, item.check))
+  }
+
+  function Role(id, name, check)
+  {
+    var self = this;
+
+    self.id = ko.observable(id)
+    self.name = ko.observable(name)
+    self.check = ko.observable(check)
+
+    self.seleccionar = function (id)
+    {
+      // toggle?
+      // apply styles? 
+      self.check = !!self.check
+
+    }
   }
 
   function message(message)

@@ -59,6 +59,8 @@ namespace TemplateCoreMaterial.Controllers
     /// </summary>
     /// <returns>View to create a new User</returns>
     //[Authorize(Roles = "Administrator")]
+    [HttpGet]
+    [Route("/api/users/create")]
     [Authorize(Policy = "Create Users")]
     public IActionResult Create()
     {
@@ -73,7 +75,8 @@ namespace TemplateCoreMaterial.Controllers
       model.Roles = rolesViewmodel;
 
       // view without headers, testing.
-      return this.View("CreaUserNoHeader", model);
+      return Json(model);
+      //return this.View("CreaUserNoHeader", model);
     }
 
     /// <summary>
@@ -154,9 +157,7 @@ namespace TemplateCoreMaterial.Controllers
       }
       catch
       {
-        // test when the error is thrown 
-        string message = "Boom!";
-        return this.Json(message);
+        throw;
       }
     }
 
@@ -279,6 +280,17 @@ namespace TemplateCoreMaterial.Controllers
     [Authorize(Policy = "View Users")]
     public IActionResult Index()
     {
+      return this.View();
+    }
+
+    /// <summary>
+    /// Gets this instance.
+    /// </summary>
+    /// <returns>IActionResult.</returns>
+    [HttpGet]
+    [Route("/api/users")]
+    public IActionResult Get()
+    {
       List<AspNetUser> users = this.userService.GetAll().ToList();
 
       AspNetUser loggedUser = users.Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
@@ -293,7 +305,7 @@ namespace TemplateCoreMaterial.Controllers
       // create view model.
       var model = this.GetIndexModelFromUsers(orderUsers);
 
-      return this.View(model);
+      return this.Json(model);
     }
 
     /// <summary>
