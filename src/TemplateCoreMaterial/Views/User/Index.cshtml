@@ -52,7 +52,6 @@
     $(document).ready(function ()
     {
       var uri = 'api/users';
-      // Send an AJAX request
       $.ajax(
       {
         url: uri,
@@ -61,7 +60,6 @@
         success: function (data)
         {
           data.forEach(addUser);
-
           ko.applyBindings(new ViewModel, document.getElementById('userlist'));
         },
         error: function (data)
@@ -90,16 +88,13 @@
     });
   </script>
 }
-
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--2-col"></div>
   <div class="mdl-cell mdl-cell--9-col">
-
     <dialog class="mdl-dialog">
       <div id="createuserdialog" class="mdl-dialog__content">
         <div align="center">
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            @*name field*@
             <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
             <div>
               <input class="mdl-textfield__input" type="text" id="name" data-bind="value:name()" />
@@ -109,7 +104,6 @@
         </div>
         <div align="center">
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            @*name field*@
             <label class="mdl-textfield__label" for="name">@Localizer["Username"]</label>
             <div>
               <input class="mdl-textfield__input" type="text" id="username" data-bind="value:username()" />
@@ -119,7 +113,6 @@
         </div>
         <div align="center">
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            @*name field*@
             <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
             <div>
               <input class="mdl-textfield__input" type="text" id="email" data-bind="value:email()" />
@@ -127,21 +120,14 @@
             </div>
           </div>
         </div>
-
-        @*list with the roles to add to the new user.*@
-        <ul class="demo-list-two mdl-list" data-bind="foreach: roles">
+        <ul class="mdl-list" data-bind="foreach: roles">
           <li class="mdl-list__item">
-
-            <span class="mdl-list__item-primary-content">
-              <label data-bind="attr: {'for': 'role' + id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-                <input type="checkbox" data-bind="checked: check(), click: seleccionar(id()), attr: {id: 'role' + id()}" class="mdl-checkbox__input" checked />
-              </label>
-            </span>
-
-            <span class="mdl-list__item-secondary-action">
-              <span data-bind="text:name()"></span>
-            </span>
-
+            <label data-bind="checkbox: check(), attr: {'for': id(), id: 'lbl'+ id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+              <input class="mdl-checkbox__input" type="checkbox" data-bind="checked: check, attr: {id: id()}"/>
+              <span class="mdl-checkbox__label">
+                <span class="mdl-list__item-secondary-action" data-bind="text:name()"></span>
+              </span>
+            </label>
           </li>
         </ul>
       </div>
@@ -152,33 +138,27 @@
     </dialog>
 
     <h4>@Localizer["Users"]</h4>
-
     <ul id="userlist" class="index-list" data-bind="foreach: userResult">
       <li data-bind="attr: {id: 'itemList-' + id() }" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
-
         <span class="mdl-list__item-primary-content">
           <i class="material-icons mdl-list__item-avatar">person</i>
           <span data-bind="text:name"></span>
           <span class="mdl-list__item-sub-title" data-bind="text:email"></span>
         </span>
-
         @if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
         {
           <button data-bind="attr: {id: 'edit-' + id() }, click: redirect" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">mode_edit</i>
           </button>
-
           <span class="mdl-tooltip" data-bind="attr: {'data-mdl-for': 'edit-' + id() }">
             @Localizer["Edit"]
           </span>
         }
-
         @if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
         {
           <button data-bind="attr: {id: 'delete-' + id() }, click: remove" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">delete</i>
           </button>
-
           <span class="mdl-tooltip" data-bind="attr: {'data-mdl-for': 'delete-' + id() }">
             @Localizer["Delete"]
           </span>
@@ -190,15 +170,9 @@
   <div class="button-footer mdl-color--grey-100">
     @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
     {
-      @*<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
-                onclick="@("window.location.href='" + @Url.Action("Create", "User") + "'");">
-          <i class="material-icons">add</i>
-        </button>*@
-
       <button id="show-dialog" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
         <i class="material-icons">add</i>
       </button>
-
       <div class="mdl-tooltip" data-mdl-for="add">
         @Localizer["Add"]
       </div>
@@ -210,24 +184,20 @@
   var users = [];
   var createUserRoles = [];
   var createUser;
-
   function addUser(item, index)
   {
     users.push(new User(item.id, item.email, item.name));
   }
-
   function User(id, email, name)
   {
     var self = this;
     self.id = ko.observable(id);
     self.name = ko.observable(name);
     self.email = ko.observable(email);
-
     self.redirect = function ()
     {
       window.location.href = "User/Edit/" + self.id();
     }
-
     self.remove = function ()
     {
       deleteUser(self.id());
@@ -235,7 +205,6 @@
   }
 
   var dialog = document.querySelector('dialog');
-
   var showDialogButton = document.querySelector('#show-dialog');
   if (!dialog.showModal)
   {
@@ -253,6 +222,8 @@
         success: function (data)
         {
           ko.applyBindings(new CreateUserViewModel(data), document.getElementById('createuserdialog'))
+          dialog.showModal();
+          dialog.style.width = "400px";
         },
         error: function (data)
         {
@@ -261,9 +232,6 @@
 
     // after invoking webapi and if success, return json and push it to users.
     // ko.contextFor(document.getElementById("userlist")).$data.add(data.id, data.email, data.name);
-
-    dialog.showModal();
-    dialog.style.width = "400px";
   });
 
   dialog.querySelector('.close').addEventListener('click', function ()
@@ -303,34 +271,31 @@
   {
     var self = this;
 
-    self.name = ko.observable(data.name);
-    self.email = ko.observable(data.email);
-    self.username = ko.observable(data.userName);
+    self.name = ko.observable(null);
+    self.email = ko.observable(null);
+    self.username = ko.observable(null);
 
-    data.roles.forEach(createRoles)
+    data.forEach(createRoles)
     self.roles = ko.observableArray(createUserRoles);
   }
 
   function createRoles(item, index)
   {
-    createUserRoles.push(new Role(item.id, item.name, item.check))
+    createUserRoles.push(new Role(item))
   }
 
-  function Role(id, name, check)
+  function Role(item)
   {
     var self = this;
 
-    self.id = ko.observable(id)
-    self.name = ko.observable(name)
-    self.check = ko.observable(check)
+    self.id = ko.observable(item.id)
+    self.name = ko.observable(item.name)
+    self.check = ko.observable(item.check || false)
 
-    self.seleccionar = function (id)
-    {
-      // toggle?
-      // apply styles? 
-      self.check = !!self.check
-
-    }
+    //self.seleccionar = function (id)
+    //{
+    //  alert(self.check())
+    //}
   }
 
   function message(message)
@@ -341,4 +306,50 @@
       message: message
     });
   }
+
+  ko.bindingHandlers.checkbox = {
+    init: function (element, valueAccessor, allBindings, viewModel, bindingContext)
+    {
+      // This will be called when the binding is first applied to an element
+      // Set up any initial state, event handlers, etc. here
+      var $el = $(element);
+      var selected = valueAccessor();
+      if (selected)
+      {
+        $el.addClass('is-checked')
+        //$(this).children().first().attr("checked", true);
+      }
+      else
+      {
+        $el.removeClass('is-checked')
+        //$(this).children().first().removeAttr("checked");
+      }
+    },
+    update: function (element, valueAccessor, allBindings, viewModel, bindingContext)
+    {
+      var $el = $(element);
+      var selected = valueAccessor();
+      if (selected)
+      {
+        $el.addClass('is-checked')
+      }
+      else
+      {
+        $el.removeClass('is-checked')
+      }
+      // This will be called once when the binding is first applied to an element,
+      // and again whenever any observables/computeds that are accessed change
+      // Update the DOM element based on the supplied values here.
+      //var $el = $(element);
+      //var selected = valueAccessor();
+      //if (selected)
+      //{
+      //  $el.attr("checked", true);
+      //}
+      //else
+      //{
+      //  $el.removeAttr("checked");
+      //}
+    }
+  };
 </script>

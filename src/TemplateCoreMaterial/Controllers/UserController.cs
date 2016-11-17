@@ -65,17 +65,17 @@ namespace TemplateCoreMaterial.Controllers
     public IActionResult Create()
     {
       // create view model.
-      var model = new UserCreateViewModel();
+      // var model = new UserCreateViewModel();
 
       var roles = this.userService.GetAllRoles();
 
       // load the roles. id and name.
       var rolesViewmodel = this.GetRolesForViewModel(roles);
 
-      model.Roles = rolesViewmodel;
+      // model.Roles = rolesViewmodel;
 
       // view without headers, testing.
-      return Json(model);
+      return Json(rolesViewmodel);
       //return this.View("CreaUserNoHeader", model);
     }
 
