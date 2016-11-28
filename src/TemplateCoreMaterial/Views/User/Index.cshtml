@@ -16,7 +16,7 @@
     bottom: 0;
     /*bottom: 100px;*/
     padding: 1rem;
-    background-color: #FFFFFF;
+    background-color: transparent;
     text-align: center;
   }
 
@@ -84,6 +84,15 @@
           self.userResult().push(new User(id, mail, name))
           self.refresh()
         }
+
+        self.removeUser = function (id)
+        {
+          self.userResult.remove(function (user)
+          {
+            return user.id() == id;
+          });
+        }
+
       };
     });
   </script>
@@ -94,45 +103,42 @@
     <dialog class="mdl-dialog">
       <div id="createuserdialog" class="mdl-dialog__content">
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <div class="mdl-textfield mdl-js-textfield">
+            <input data-bind='value:name(), valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="name" />
             <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
-            <div>
-              <input class="mdl-textfield__input" type="text" id="name" data-bind="value:name()" />
-              <span class="text-danger" />
-            </div>
+            <span data-bind='visible: name.hasError(), text: name.validationMessage' class="mdl-textfield__error" />
           </div>
+
         </div>
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <div class="mdl-textfield mdl-js-textfield">
+            <input data-bind='value:username(), valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="username" />
             <label class="mdl-textfield__label" for="name">@Localizer["Username"]</label>
-            <div>
-              <input class="mdl-textfield__input" type="text" id="username" data-bind="value:username()" />
-              <span class="text-danger" />
-            </div>
+            <span data-bind='visible: username.hasError(), text: username.validationMessage' class="mdl-textfield__error" />
           </div>
         </div>
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <div class="mdl-textfield mdl-js-textfield">
             <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
             <div>
-              <input class="mdl-textfield__input" type="text" id="email" data-bind="value:email()" />
-              <span class="text-danger" />
+              <input data-bind='value:email(), valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="email" />
+              <span data-bind='visible: email.hasError(), text: email.validationMessage' class="mdl-textfield__error" />
             </div>
           </div>
         </div>
         <ul class="mdl-list" data-bind="foreach: roles">
           <li class="mdl-list__item">
             <label data-bind="checkbox: check(), attr: {'for': id(), id: 'lbl'+ id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-              <input class="mdl-checkbox__input" type="checkbox" data-bind="checked: check, attr: {id: id()}"/>
+              <input class="mdl-checkbox__input" type="checkbox" data-bind='checked: check, attr: {id: id()}' />
               <span class="mdl-checkbox__label">
-                <span class="mdl-list__item-secondary-action" data-bind="text:name()"></span>
+                <span class="mdl-list__item-secondary-action" data-bind='text:name()'></span>
               </span>
             </label>
           </li>
         </ul>
       </div>
       <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
+        <button type="button" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
         <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button close">Cancel</button>
       </div>
     </dialog>
@@ -167,7 +173,7 @@
     </ul>
   </div>
 
-  <div class="button-footer mdl-color--grey-100">
+  <div class="button-footer">
     @if (await AuthorizationService.AuthorizeAsync(User, "Create Users"))
     {
       <button id="show-dialog" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
@@ -187,6 +193,7 @@
   function addUser(item, index)
   {
     users.push(new User(item.id, item.email, item.name));
+    //users = users.sort(x => x.name());
   }
   function User(id, email, name)
   {
@@ -229,9 +236,6 @@
         {
         }
       });
-
-    // after invoking webapi and if success, return json and push it to users.
-    // ko.contextFor(document.getElementById("userlist")).$data.add(data.id, data.email, data.name);
   });
 
   dialog.querySelector('.close').addEventListener('click', function ()
@@ -250,19 +254,73 @@
       contentType: "application/json;charset=utf-8",
       success: function (data)
       {
-        // removes from DOM.
-        $("#itemList-" + id).remove();
+        // ko.contextFor(document.getElementById("userlist")).$data.add(data.id, data.email, data.name);
+        // users = users.filter(h => h.id() !== id);
+        // $("#itemList-" + id).remove();
+        // ko.contextFor(document.getElementById("userlist")).$data.refresh();
 
-        // show message.
-        // create a proper json to send data.message.
+        ko.contextFor(document.getElementById("userlist")).$data.removeUser(id)
         message(data)
       },
       error: function (data)
       {
-        // show error, throw error?
-        // read documentation about web api, throw error.
-        // I think error: is about when the service is not available?
         message("Error while deleting user")
+      }
+    });
+  }
+
+  ko.extenders.required = function (target, overrideMessage)
+  {
+    //add some sub-observables to our observable
+    target.hasError = ko.observable();
+    target.validationMessage = ko.observable();
+
+    //define a function to do validation
+    function validate(newValue)
+    {
+      target.hasError(newValue ? false : true);
+      target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
+    }
+
+    //initial validation
+    validate(target());
+
+    //validate whenever the value changes
+    target.subscribe(validate);
+
+    //return the original observable
+    return target;
+  };
+
+  function Create()
+  {
+    // validations.
+    var uri = 'api/users/create';
+    var obj = new Object();
+    obj.name = document.getElementById('name').value;
+    obj.username = document.getElementById('username').value;
+    obj.email = document.getElementById('email').value;
+    obj.roles = createUserRoles;
+    var model = JSON.stringify(obj);
+
+    $.ajax(
+    {
+      type: 'POST',
+      url: uri,
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      data: model,
+      success: function (data)
+      {
+        // after invoking webapi and if success, return json and push it to users.
+        addUser(data, 0);
+        ko.contextFor(document.getElementById("userlist")).$data.refresh();
+        message("User created.");
+        var dialog = document.querySelector('dialog');
+        dialog.close();
+      },
+      error: function (data)
+      {
       }
     });
   }
@@ -270,11 +328,9 @@
   function CreateUserViewModel(data)
   {
     var self = this;
-
-    self.name = ko.observable(null);
-    self.email = ko.observable(null);
-    self.username = ko.observable(null);
-
+    self.name = ko.observable("").extend({ required: "Please enter the name" });
+    self.email = ko.observable("").extend({ required: "Please enter the email" });
+    self.username = ko.observable("").extend({ required: "Please enter the username" });
     data.forEach(createRoles)
     self.roles = ko.observableArray(createUserRoles);
   }
@@ -287,15 +343,9 @@
   function Role(item)
   {
     var self = this;
-
     self.id = ko.observable(item.id)
     self.name = ko.observable(item.name)
     self.check = ko.observable(item.check || false)
-
-    //self.seleccionar = function (id)
-    //{
-    //  alert(self.check())
-    //}
   }
 
   function message(message)
@@ -310,19 +360,15 @@
   ko.bindingHandlers.checkbox = {
     init: function (element, valueAccessor, allBindings, viewModel, bindingContext)
     {
-      // This will be called when the binding is first applied to an element
-      // Set up any initial state, event handlers, etc. here
       var $el = $(element);
       var selected = valueAccessor();
       if (selected)
       {
         $el.addClass('is-checked')
-        //$(this).children().first().attr("checked", true);
       }
       else
       {
         $el.removeClass('is-checked')
-        //$(this).children().first().removeAttr("checked");
       }
     },
     update: function (element, valueAccessor, allBindings, viewModel, bindingContext)
@@ -337,19 +383,6 @@
       {
         $el.removeClass('is-checked')
       }
-      // This will be called once when the binding is first applied to an element,
-      // and again whenever any observables/computeds that are accessed change
-      // Update the DOM element based on the supplied values here.
-      //var $el = $(element);
-      //var selected = valueAccessor();
-      //if (selected)
-      //{
-      //  $el.attr("checked", true);
-      //}
-      //else
-      //{
-      //  $el.removeAttr("checked");
-      //}
     }
   };
 </script>

@@ -216,7 +216,7 @@ namespace TemplateCoreMaterial.Service.Implement
     /// <param name="userName">Name of the user.</param>
     /// <param name="name">The name.</param>
     /// <param name="roleIds">The role ids.</param>
-    public void Insert(string email, string userName, string name, IEnumerable<string> roleIds)
+    public ApplicationUser Insert(string email, string userName, string name, IEnumerable<string> roleIds)
     {
       // create new User
       ApplicationUser newUser = new ApplicationUser
@@ -257,6 +257,8 @@ namespace TemplateCoreMaterial.Service.Implement
 
       // save changes made to AspNetUsers table and AspNetUserRoles
       this.unitOfWork.Commit();
+
+      return newUser;
     }
 
     /// <summary>

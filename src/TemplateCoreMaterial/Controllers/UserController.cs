@@ -79,6 +79,22 @@ namespace TemplateCoreMaterial.Controllers
       //return this.View("CreaUserNoHeader", model);
     }
 
+
+    /// <summary>
+    /// Creates the specified model.
+    /// </summary>
+    /// <param name="roles">The roles.</param>
+    /// <param name="model">The model.</param>
+    /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
+    [HttpPost]
+    [Route("/api/users/create")]
+    public IActionResult Insert(string roles, [FromBody] UserCreateViewModel model)
+    {
+
+      ApplicationUser user = this.userService.Insert(model.Email, model.UserName, model.Name, new List<string>());
+      return this.Json(user);
+    }
+
     /// <summary>
     /// Post Action of Create User
     /// </summary>

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace TemplateCoreMaterial.ViewModels.User
 {
+  using Newtonsoft.Json;
   using System.Collections.Generic;
   using System.ComponentModel.DataAnnotations;
 
@@ -18,9 +19,9 @@ namespace TemplateCoreMaterial.ViewModels.User
     /// </summary>
     public UserCreateViewModel()
     {
-      this.UserName = "adenial";
-      this.Email = "adenialster@gmail.com";
-      this.Name = "Rolando";
+      //this.UserName = "adenial";
+      //this.Email = "adenialster@gmail.com";
+      //this.Name = "Rolando";
       this.Roles = new List<UserRoleCreateViewModel>();
     }
 
@@ -30,6 +31,7 @@ namespace TemplateCoreMaterial.ViewModels.User
     /// <value>The name.</value>
     [Required(ErrorMessage = "The name is a required field.")]
     [Display(Name = "Name")]
+    [JsonProperty("name")]
     public string Name { get; set; }
 
     /// <summary>
@@ -38,6 +40,7 @@ namespace TemplateCoreMaterial.ViewModels.User
     /// <value>The name of the user.</value>
     [Display(Name = "Username")]
     [Required(ErrorMessage = "The username is a required field.")]
+    [JsonProperty("username")]
     public string UserName { get; set; }
 
     /// <summary>
@@ -47,12 +50,14 @@ namespace TemplateCoreMaterial.ViewModels.User
     [Display(Name = "Email")]
     [Required(ErrorMessage = "The email is a required field.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]
+    [JsonProperty("email")]
     public string Email { get; set; }
 
     /// <summary>
     /// Gets or sets the roles.
     /// </summary>
     /// <value>The roles.</value>
+    [JsonProperty("roles")]
     public IEnumerable<UserRoleCreateViewModel> Roles { get; set; }
   }
 }

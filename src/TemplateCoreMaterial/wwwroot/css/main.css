@@ -1,8 +1,24 @@
-.text-danger {
-  color: crimson; }
+.text-danger
+{
+  color: rgb(213,0,0);
+  margin-top: 3px;
+  font-size: 12px;
+  position: absolute;
+  display: block;
+}
 
-.snippet-group {
-  width: 50%; }
+.snippet-group
+{
+  width: 50%;
+}
 
-body {
-  font-family: "Roboto", "Helvetica", "Arial", "sands-serif" !important; }
+body
+{
+  font-family: "Roboto", "Helvetica", "Arial", "sands-serif" !important;
+}
+
+
+/*.mdl-textfield__error
+{
+  color: crimson;
+}*/
