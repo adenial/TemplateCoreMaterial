@@ -74,9 +74,7 @@
 
         self.refresh = function ()
         {
-          var data = self.userResult().slice(0);
-          self.userResult([]);
-          self.userResult(data);
+          self.userResult(users);
         };
 
         self.add = function (id, mail, name)
@@ -93,7 +91,50 @@
           });
         }
 
+        self.sortUsers = function ()
+        {
+          self.userResult.sort(function (user1, user2)
+          {
+            return user1.name().localeCompare(user2.name()) || user1.name().localeCompare(user2.name());
+          });
+        };
       };
+
+      function CreateUserViewModel()
+      {
+        var self = this;
+        self.name = ko.observable("").extend({ required: "Please enter the name" });
+        self.email = ko.observable("").extend({ required: "Please enter the email" });
+        self.username = ko.observable("").extend({ required: "Please enter the username" });
+        self.roles = ko.observableArray([]);
+
+        //self.refresh = function ()
+        //{
+        //  var data = self.roles().slice(0);
+        //  self.roles([]);
+        //  self.roles(data);
+        //};
+
+        self.reset = function ()
+        {
+          $('#divname').removeClass('is-dirty');
+          $('#divemail').removeClass('is-dirty');
+          $('#divusername').removeClass('is-dirty');
+
+          self.name("");
+          self.email("");
+          self.username("");
+        };
+
+        self.loadRoles = function (data)
+        {
+          createUserRoles = [];
+          data.forEach(createRoles)
+          self.roles(createUserRoles);
+        }
+      }
+
+      ko.applyBindings(new CreateUserViewModel(), document.getElementById('createuserdialog'))
     });
   </script>
 }
@@ -103,26 +144,26 @@
     <dialog class="mdl-dialog">
       <div id="createuserdialog" class="mdl-dialog__content">
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield">
-            <input data-bind='value:name(), valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="name" />
+          <div class="mdl-textfield mdl-js-textfield" id="divname">
+            <input data-bind='textInput:name, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="name" />
             <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
-            <span data-bind='visible: name.hasError(), text: name.validationMessage' class="mdl-textfield__error" />
+            <span data-bind='visible: name.hasError(), text: name.validationMessage' class="text-danger" />
           </div>
 
         </div>
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield">
-            <input data-bind='value:username(), valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="username" />
+          <div class="mdl-textfield mdl-js-textfield" id="divusername">
+            <input data-bind='textInput:username, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="username" />
             <label class="mdl-textfield__label" for="name">@Localizer["Username"]</label>
-            <span data-bind='visible: username.hasError(), text: username.validationMessage' class="mdl-textfield__error" />
+            <span data-bind='visible: username.hasError(), text: username.validationMessage' class="text-danger" />
           </div>
         </div>
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield">
+          <div class="mdl-textfield mdl-js-textfield" id="divemail">
             <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
             <div>
-              <input data-bind='value:email(), valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="email" />
-              <span data-bind='visible: email.hasError(), text: email.validationMessage' class="mdl-textfield__error" />
+              <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="email" />
+              <span data-bind='visible: email.hasError(), text: email.validationMessage' class="text-danger" />
             </div>
           </div>
         </div>
@@ -193,7 +234,6 @@
   function addUser(item, index)
   {
     users.push(new User(item.id, item.email, item.name));
-    //users = users.sort(x => x.name());
   }
   function User(id, email, name)
   {
@@ -228,7 +268,10 @@
         contentType: "application/json;charset=utf-8",
         success: function (data)
         {
-          ko.applyBindings(new CreateUserViewModel(data), document.getElementById('createuserdialog'))
+          // loadRoles
+          ko.contextFor(document.getElementById("createuserdialog")).$data.reset();
+          ko.contextFor(document.getElementById("createuserdialog")).$data.loadRoles(data)
+
           dialog.showModal();
           dialog.style.width = "400px";
         },
@@ -254,11 +297,6 @@
       contentType: "application/json;charset=utf-8",
       success: function (data)
       {
-        // ko.contextFor(document.getElementById("userlist")).$data.add(data.id, data.email, data.name);
-        // users = users.filter(h => h.id() !== id);
-        // $("#itemList-" + id).remove();
-        // ko.contextFor(document.getElementById("userlist")).$data.refresh();
-
         ko.contextFor(document.getElementById("userlist")).$data.removeUser(id)
         message(data)
       },
@@ -315,6 +353,7 @@
         // after invoking webapi and if success, return json and push it to users.
         addUser(data, 0);
         ko.contextFor(document.getElementById("userlist")).$data.refresh();
+        ko.contextFor(document.getElementById("userlist")).$data.sortUsers();
         message("User created.");
         var dialog = document.querySelector('dialog');
         dialog.close();
@@ -323,16 +362,6 @@
       {
       }
     });
-  }
-
-  function CreateUserViewModel(data)
-  {
-    var self = this;
-    self.name = ko.observable("").extend({ required: "Please enter the name" });
-    self.email = ko.observable("").extend({ required: "Please enter the email" });
-    self.username = ko.observable("").extend({ required: "Please enter the username" });
-    data.forEach(createRoles)
-    self.roles = ko.observableArray(createUserRoles);
   }
 
   function createRoles(item, index)
@@ -357,32 +386,33 @@
     });
   }
 
-  ko.bindingHandlers.checkbox = {
-    init: function (element, valueAccessor, allBindings, viewModel, bindingContext)
+  ko.bindingHandlers.checkbox =
     {
-      var $el = $(element);
-      var selected = valueAccessor();
-      if (selected)
+      init: function (element, valueAccessor, allBindings, viewModel, bindingContext)
       {
-        $el.addClass('is-checked')
-      }
-      else
+        var $el = $(element);
+        var selected = valueAccessor();
+        if (selected)
+        {
+          $el.addClass('is-checked')
+        }
+        else
+        {
+          $el.removeClass('is-checked')
+        }
+      },
+      update: function (element, valueAccessor, allBindings, viewModel, bindingContext)
       {
-        $el.removeClass('is-checked')
+        var $el = $(element);
+        var selected = valueAccessor();
+        if (selected)
+        {
+          $el.addClass('is-checked')
+        }
+        else
+        {
+          $el.removeClass('is-checked')
+        }
       }
-    },
-    update: function (element, valueAccessor, allBindings, viewModel, bindingContext)
-    {
-      var $el = $(element);
-      var selected = valueAccessor();
-      if (selected)
-      {
-        $el.addClass('is-checked')
-      }
-      else
-      {
-        $el.removeClass('is-checked')
-      }
-    }
-  };
+    };
 </script>
