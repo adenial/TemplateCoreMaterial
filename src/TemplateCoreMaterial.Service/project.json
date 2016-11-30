@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "type": "build"
     },
-    "NETStandard.Library": "1.6.0",
+    "NETStandard.Library": "1.6.1",
     "TemplateCoreMaterial.Model": "1.0.0-*",
     "TemplateCoreMaterial.Repository": "1.0.0-*"
   },

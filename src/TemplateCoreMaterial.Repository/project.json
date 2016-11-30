@@ -4,9 +4,9 @@
   "dependencies":
   {
     "TemplateCoreMaterial.Model": "1.0.0-*",
-    "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
-    "Microsoft.EntityFrameworkCore.SqlServer": "1.0.1",
-    "NETStandard.Library": "1.6.0",
+    "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0" ,
+    "NETStandard.Library": "1.6.1",
     "StyleCop.Analyzers":
     {
       "version": "1.0.0",

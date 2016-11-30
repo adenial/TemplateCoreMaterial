@@ -12,7 +12,7 @@
     "Microsoft.NETCore.App":
     {
       "type": "platform",
-      "version": "1.0.1"
+      "version": "1.1.0"
     },
     "xunit": "2.1.0",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
@@ -20,13 +20,13 @@
     {
       "target": "project"
     },
-    "Microsoft.EntityFrameworkCore.InMemory": "1.0.1",
-    "Microsoft.CodeCoverage": "1.0.1"
+    "Microsoft.EntityFrameworkCore.InMemory": "1.1.0",
+    "Microsoft.CodeCoverage": "1.0.2"
   },
 
   "frameworks":
   {
-    "netcoreapp1.0":
+    "netcoreapp1.1":
     {
       "imports":
       [

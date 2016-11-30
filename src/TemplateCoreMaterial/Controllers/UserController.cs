@@ -79,7 +79,6 @@ namespace TemplateCoreMaterial.Controllers
       //return this.View("CreaUserNoHeader", model);
     }
 
-
     /// <summary>
     /// Creates the specified model.
     /// </summary>
