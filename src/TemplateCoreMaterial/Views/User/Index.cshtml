@@ -1,6 +1,6 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.AspNetCore.Authorization
-@model IEnumerable<UserIndexViewModel>
+@*@model IEnumerable<UserIndexViewModel>*@
 @inject IAuthorizationService AuthorizationService
 @inject IViewLocalizer Localizer
 
@@ -185,7 +185,7 @@
     </dialog>
 
     <h4>@Localizer["Users"]</h4>
-    <ul id="userlist" class="index-list" data-bind="foreach: userResult">
+    <ul id="userlist" class="mdl-list" data-bind="foreach: userResult">
       <li data-bind="attr: {id: 'itemList-' + id() }" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
         <span class="mdl-list__item-primary-content">
           <i class="material-icons mdl-list__item-avatar">person</i>

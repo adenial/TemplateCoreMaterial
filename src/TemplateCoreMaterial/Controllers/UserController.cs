@@ -64,19 +64,9 @@ namespace TemplateCoreMaterial.Controllers
     [Authorize(Policy = "Create Users")]
     public IActionResult Create()
     {
-      // create view model.
-      // var model = new UserCreateViewModel();
-
       var roles = this.userService.GetAllRoles();
-
-      // load the roles. id and name.
       var rolesViewmodel = this.GetRolesForViewModel(roles);
-
-      // model.Roles = rolesViewmodel;
-
-      // view without headers, testing.
       return Json(rolesViewmodel);
-      //return this.View("CreaUserNoHeader", model);
     }
 
     /// <summary>
@@ -89,7 +79,6 @@ namespace TemplateCoreMaterial.Controllers
     [Route("/api/users/create")]
     public IActionResult Insert(string roles, [FromBody] UserCreateViewModel model)
     {
-
       ApplicationUser user = this.userService.Insert(model.Email, model.UserName, model.Name, new List<string>());
       return this.Json(user);
     }
@@ -310,11 +299,6 @@ namespace TemplateCoreMaterial.Controllers
 
       AspNetUser loggedUser = users.Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
       users.Remove(loggedUser);
-
-      //users = users.ToList().Remove(
-      //  users.ToList()
-      //  .Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase)));
-
       var orderUsers = users.OrderBy(x => x.Name);
 
       // create view model.

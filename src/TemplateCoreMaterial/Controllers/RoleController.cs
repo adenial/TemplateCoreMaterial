@@ -32,6 +32,19 @@ namespace TemplateCoreMaterial.Controllers
     private IStringLocalizer<RoleController> localizer;
 
     /// <summary>
+    /// Get all roles.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("/api/roles")]
+    public IActionResult Get()
+    {
+      var roleNames = this.roleService.GetAllRoleNames();
+      var model = this.GetIndexViewModelFromRoles(roleNames);
+      return this.Json(model);
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="RoleController" /> class.
     /// </summary>
     /// <param name="roleService">The role service.</param>

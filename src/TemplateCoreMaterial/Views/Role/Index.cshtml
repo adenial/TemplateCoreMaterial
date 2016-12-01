@@ -1,89 +1,193 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
-@model IEnumerable<AdminRoleIndexViewModel>
+@*@model IEnumerable<AdminRoleIndexViewModel>*@
 @{
   ViewData["Title"] = Localizer["Roles"];
 }
 
+<script type="text/javascript" src="~/lib/knockout/dist/knockout.js"></script>
 <style>
-  .full-width {
-    width: 100%;
+  .list-icon
+  {
+    margin-right: 16px;
   }
+
+  .button-footer
+  {
+    position: fixed;
+    right: 20px;
+    bottom: 0;
+    /*bottom: 100px;*/
+    padding: 1rem;
+    background-color: transparent;
+    text-align: center;
+  }
+
+  .mdl-list__item
+  {
+    border-collapse: collapse;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    background-color: rgb(255,255,255);
+    white-space: nowrap;
+    height: 60px;
+  }
+
+    .mdl-list__item:first-child
+    {
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .mdl-list__item > button
+    {
+      display: none;
+    }
+
+    .mdl-list__item:hover > button
+    {
+      display: block;
+    }
 </style>
 
+@section scripts
+{
+  <script>
+    var uri = 'api/roles';
+    $(document).ready(function ()
+    {
+      var uri = 'api/roles';
+      $.ajax(
+      {
+        url: uri,
+        type: 'GET',
+        contentType: "application/json;charset=utf-8",
+        success: function (data)
+        {
+          data.forEach(addRole);
+          ko.applyBindings(new ViewModel, document.getElementById('rolelist'));
+        },
+        error: function (data)
+        {
+        }
+      });
+
+      function ViewModel()
+      {
+        var self = this;
+        self.roleResult = ko.observableArray(roles);
+
+        self.refresh = function ()
+        {
+          self.roleResult(roles);
+        };
+
+        //self.add = function (id, mail, name)
+        //{
+        //  self.roleResult().push(new Role(id, mail, name))
+        //  self.refresh()
+        //}
+
+        self.removeRole = function (id)
+        {
+          self.roleResult.remove(function (user)
+          {
+            return user.id() == id;
+          });
+        }
+
+        self.sortRoles = function ()
+        {
+          self.roleResult.sort(function (user1, user2)
+          {
+            return user1.name().localeCompare(user2.name()) || user1.name().localeCompare(user2.name());
+          });
+        };
+      };
+
+      function CreateRolesViewModel()
+      {
+        var self = this;
+        self.name = ko.observable("").extend({ required: "Please enter the name" });
+        self.email = ko.observable("").extend({ required: "Please enter the email" });
+        self.username = ko.observable("").extend({ required: "Please enter the username" });
+        self.roles = ko.observableArray([]);
+        self.reset = function ()
+        {
+          $('#divname').removeClass('is-dirty');
+          $('#divemail').removeClass('is-dirty');
+          $('#divusername').removeClass('is-dirty');
+
+          self.name("");
+          self.email("");
+          self.username("");
+        };
+
+        self.loadRoles = function (data)
+        {
+          createUserRoles = [];
+          data.forEach(createRoles)
+          self.roles(createUserRoles);
+        }
+      }
+
+      // ko.applyBindings(new CreateUserViewModel(), document.getElementById('createuserdialog'))
+    });
+  </script>
+}
 
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--12-col full-width">
+  <div class="mdl-cell mdl-cell--2-col"></div>
+  <div class="mdl-cell mdl-cell--9-col">
     <h4>@Localizer["Roles"]</h4>
+
+    <ul id="rolelist" class="mdl-list" data-bind="foreach: roleResult">
+      <li data-bind="attr: {id: 'itemList-' + name }" class="mdl-list__item mdl-shadow--4dp ">
+        <span class="mdl-list__item-primary-content">
+          <i class="list-icon material-icons">insert_invitation</i>
+          <span data-bind="text:name"></span>
+          @*<span class="mdl-list__item-sub-title" data-bind="text:name"></span>*@
+        </span>
+        @*@if (await AuthorizationService.AuthorizeAsync(User, "Update Users"))
+          {
+            <button data-bind="attr: {id: 'edit-' + id() }, click: redirect" class="mdl-button mdl-js-button mdl-button--icon">
+              <i class="material-icons">mode_edit</i>
+            </button>
+            <span class="mdl-tooltip" data-bind="attr: {'data-mdl-for': 'edit-' + id() }">
+              @Localizer["Edit"]
+            </span>
+          }*@
+        @*@if (await AuthorizationService.AuthorizeAsync(User, "Delete Users"))
+          {
+            <button data-bind="attr: {id: 'delete-' + id() }, click: remove" class="mdl-button mdl-js-button mdl-button--icon">
+              <i class="material-icons">delete</i>
+            </button>
+            <span class="mdl-tooltip" data-bind="attr: {'data-mdl-for': 'delete-' + id() }">
+              @Localizer["Delete"]
+            </span>
+          }*@
+      </li>
+    </ul>
   </div>
 
-  <div class="mdl-cell mdl-cell--12-col full-width mdl-textfield--align-right">
-    <a id="add" asp-action="Create"><i class="material-icons">add</i></a>
+  @*<div class="button-footer">
+    <button id="show-dialog" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+      <i class="material-icons">add</i>
+    </button>
     <div class="mdl-tooltip" data-mdl-for="add">
       @Localizer["Add"]
     </div>
-  </div>
-
-  <div class="mdl-cell mdl-cell--12-col">
-    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width">
-      <thead>
-        <tr>
-          <th class="mdl-data-table__cell--non-numeric">
-            @Localizer["Name"]
-          </th>
-          <th class="mdl-data-table__cell--non-numeric">
-            @Localizer["Actions"]
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach (var item in Model)
-        {
-          <tr>
-            <td class="mdl-data-table__cell--non-numeric">
-              @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td class="mdl-data-table__cell--non-numeric">
-              <a id="delete-@item.Name" title=@Localizer["Delete"] href='@Url.Action("Delete", "Role", new { id = item.Name })'>
-                <i class="material-icons">delete_forever</i>
-              </a>
-              <div class="mdl-tooltip" data-mdl-for="delete-@item.Name">
-                @Localizer["Delete"]
-              </div>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+  </div>*@
 </div>
 
+<script type="text/javascript">
+  var roles = [];
 
-
-@*<table class="table">
-    <thead>
-      <tr>
-        <th>
-          @Localizer["Name"]
-        </th>
-        <th>
-          @Localizer["Actions"]
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach (var item in Model)
-      {
-        <tr>
-          <td>
-            @Html.DisplayFor(modelItem => item.Name)
-          </td>
-          <td>
-            <a class="btn btn-circle btn-icon-only red" title=@Localizer["Delete"] href='@Url.Action("Delete", "Role", new { name = item.Name })'>
-              <i class="fa fa-trash"></i>
-            </a>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>*@
+  function addRole(item, index)
+  {
+    roles.push(new Role(item));
+  }
+  function Role(item)
+  {
+    var self = this;
+    self.name = ko.observable(item.name)
+  }
+</script>
