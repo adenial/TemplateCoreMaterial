@@ -400,6 +400,8 @@
         {
           $el.removeClass('is-checked')
         }
+
+        componentHandler.upgradeAllRegistered();
       },
       update: function (element, valueAccessor, allBindings, viewModel, bindingContext)
       {
@@ -413,6 +415,9 @@
         {
           $el.removeClass('is-checked')
         }
+
+        // componentHandler.upgradeAllRegistered();
       }
+
     };
 </script>
