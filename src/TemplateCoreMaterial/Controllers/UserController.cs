@@ -66,21 +66,69 @@ namespace TemplateCoreMaterial.Controllers
     {
       var roles = this.userService.GetAllRoles();
       var rolesViewmodel = this.GetRolesForViewModel(roles);
-      return Json(rolesViewmodel);
+      return this.Json(rolesViewmodel);
+    }
+
+    /// <summary>
+    /// Gets this instance.
+    /// </summary>
+    /// <returns>IActionResult.</returns>
+    [HttpGet]
+    [Route("api/users")]
+    public IEnumerable<UserIndexViewModel> GetAll()
+    {
+      List<AspNetUser> users = this.userService.GetAll().ToList();
+      AspNetUser loggedUser = users.Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
+      users.Remove(loggedUser);
+      var orderUsers = users.OrderBy(x => x.Name);
+
+      // create view model.
+      var model = this.GetIndexModelFromUsers(orderUsers).ToList();
+
+      return model;
     }
 
     /// <summary>
     /// Creates the specified model.
     /// </summary>
-    /// <param name="roles">The roles.</param>
     /// <param name="model">The model.</param>
     /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
     [HttpPost]
     [Route("/api/users/create")]
-    public IActionResult Insert(string roles, [FromBody] UserCreateViewModel model)
+    public IActionResult Insert([FromBody] UserCreateViewModel model)
     {
-      ApplicationUser user = this.userService.Insert(model.Email, model.UserName, model.Name, new List<string>());
-      return this.Json(user);
+      var usernameExists = this.userService.CanInsertUserName(model.UserName);
+
+      if (!usernameExists)
+      {
+        return BadRequest();
+      }
+
+      List<string> selectedRoles = model.Roles.Where(x => x.Check).Select(x => x.Id).ToList();
+
+      ApplicationUser user = this.userService.Insert(model.Email, model.UserName, model.Name, selectedRoles);
+
+      var newUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };
+      return CreatedAtRoute("GetUser", new { id = newUser.Id }, newUser);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("api/users/{id}", Name = "GetUser")]
+    public IActionResult GetById(string id)
+    {
+      if (string.IsNullOrWhiteSpace(id))
+      {
+        return BadRequest();
+      }
+
+      var user = this.userService.GetUserById(id);
+      var selectedUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };
+      return new ObjectResult(selectedUser);
     }
 
     /// <summary>
@@ -285,26 +333,6 @@ namespace TemplateCoreMaterial.Controllers
     public IActionResult Index()
     {
       return this.View();
-    }
-
-    /// <summary>
-    /// Gets this instance.
-    /// </summary>
-    /// <returns>IActionResult.</returns>
-    [HttpGet]
-    [Route("/api/users")]
-    public IActionResult Get()
-    {
-      List<AspNetUser> users = this.userService.GetAll().ToList();
-
-      AspNetUser loggedUser = users.Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
-      users.Remove(loggedUser);
-      var orderUsers = users.OrderBy(x => x.Name);
-
-      // create view model.
-      var model = this.GetIndexModelFromUsers(orderUsers);
-
-      return this.Json(model);
     }
 
     /// <summary>

@@ -15,17 +15,6 @@ namespace TemplateCoreMaterial.ViewModels.User
   public class UserCreateViewModel
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserCreateViewModel" /> class.
-    /// </summary>
-    public UserCreateViewModel()
-    {
-      //this.UserName = "adenial";
-      //this.Email = "adenialster@gmail.com";
-      //this.Name = "Rolando";
-      this.Roles = new List<UserRoleCreateViewModel>();
-    }
-
-    /// <summary>
     /// Gets or sets the name.
     /// </summary>
     /// <value>The name.</value>

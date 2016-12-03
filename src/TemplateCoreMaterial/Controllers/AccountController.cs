@@ -258,7 +258,7 @@ namespace TemplateCoreMaterial.Controllers
         }
         else
         {
-          this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+          this.ModelState.AddModelError("ValidationMessage", "Invalid login attempt.");
           return this.View(model);
         }
       }

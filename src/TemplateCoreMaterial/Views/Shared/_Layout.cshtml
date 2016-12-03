@@ -13,7 +13,7 @@
   <!-- To render mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>@ViewData["Title"] - TemplateCore</title>
+  <title>@ViewData["Title"] - TemplateCoreMaterial</title>
 
   <environment names="Development">
     @*<link rel="stylesheet" href="~/css/site.css" />*@
@@ -40,7 +40,7 @@
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
         <!-- Title -->
-        <span class="mdl-layout-title">TemplateCore</span>
+        <span class="mdl-layout-title">TemplateCoreMaterial</span>
         <!-- Add spacer, to align navigation to the right -->
         <div class="mdl-layout-spacer"></div>
         <!-- Navigation. We hide it in small screens. -->
@@ -53,8 +53,6 @@
           }
 
           @await Html.PartialAsync("_LoginPartial")
-
-          <i class="material-icons">settings</i>
         </nav>
       </div>
     </header>

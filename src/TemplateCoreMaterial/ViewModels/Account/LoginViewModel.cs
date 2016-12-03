@@ -30,6 +30,12 @@ namespace TemplateCoreMaterial.ViewModels.Account
     public string Password { get; set; }
 
     /// <summary>
+    /// Gets or sets validation message.
+    /// </summary>
+    [Display(Name = "ValidationMessage")]
+    public string ValidationMessage { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether [remember me].
     /// </summary>
     /// <value><c>true</c> if [remember me]; otherwise, <c>false</c>.</value>

@@ -12,32 +12,32 @@
 }
 
 <style>
-.mdl-layout 
-{
-  align-items: center;
-  justify-content: center;
-}
+  .mdl-layout
+  {
+    align-items: center;
+    justify-content: center;
+  }
 
-.login__content 
-{
-  padding: 24px;
-  flex: none;
-}
+  .login__content
+  {
+    padding: 24px;
+    flex: none;
+  }
 
-.mdl-card__actions mdl-card--border 
-{
-  align-items: flex-end;
-}
+  .mdl-card__actions mdl-card--border
+  {
+    align-items: flex-end;
+  }
 
-#login-submit 
-{
-  float: right;
-}
+  #login-submit
+  {
+    float: right;
+  }
 
-.mdl-card__title
-{
-  height: 60px;
-}
+  .mdl-card__title
+  {
+    height: 60px;
+  }
 </style>
 
 <div class="mdl-layout mdl-js-layout mdl-color--grey-100">
@@ -63,6 +63,9 @@
               <span asp-validation-for="Password" class="text-danger"></span>
             </div>
           </div>
+          <div>
+            <span asp-validation-for="ValidationMessage" class="text-danger"></span>
+          </div>
           <br />
           <div>
             <button id="login-submit" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
@@ -71,42 +74,11 @@
           </div>
         </form>
       </div>
-      @*<div class="mdl-card__actions mdl-card--border">
-        <button id="login-submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Log in</button>
-      </div>*@
     </div>
   </main>
 </div>
-@*<div class="mdl-cell--12-col">
-    <div>
-      <div asp-validation-summary="All" class="text-danger"></div>
-      <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-        <div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <label class="mdl-textfield__label" for="UserName">@Localizer["Username"]</label>
-            <input asp-for="UserName" type="text" id="UserName" class="mdl-textfield__input" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-          </div>
-        </div>
-        <br />
-        <div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <label class="mdl-textfield__label" for="Password">@Localizer["Password"]</label>
-            <input asp-for="Password" type="password" id="Password" class="mdl-textfield__input" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-          </div>
-        </div>
-        <br />
-        <div>
-          <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            @Localizer["Log in"]
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>*@
 
-
-@section Scripts {
+@section Scripts
+{
   @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

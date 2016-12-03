@@ -48,7 +48,7 @@
 @section scripts
 {
   <script>
-    var uri = 'api/users';
+    //var uri = 'api/users';
     $(document).ready(function ()
     {
       var uri = 'api/users';
@@ -260,25 +260,41 @@
 
   showDialogButton.addEventListener('click', function ()
   {
-    var usersUrl = 'api/users/create';
-    $.ajax(
-      {
-        url: usersUrl,
-        type: 'GET',
-        contentType: "application/json;charset=utf-8",
-        success: function (data)
-        {
-          // loadRoles
-          ko.contextFor(document.getElementById("createuserdialog")).$data.reset();
-          ko.contextFor(document.getElementById("createuserdialog")).$data.loadRoles(data)
+    const url = 'api/users/create';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.send();
 
-          dialog.showModal();
-          dialog.style.width = "400px";
-        },
-        error: function (data)
-        {
-        }
-      });
+    xhr.onreadystatechange = function ()
+    {
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
+      {
+        ko.contextFor(document.getElementById("createuserdialog")).$data.reset();
+        ko.contextFor(document.getElementById("createuserdialog")).$data.loadRoles(JSON.parse(xhr.response))
+
+        dialog.showModal();
+        dialog.style.width = "400px";
+      }
+    }
+
+    //$.ajax(
+    //  {
+    //    url: usersUrl,
+    //    type: 'GET',
+    //    contentType: "application/json;charset=utf-8",
+    //    success: function (data)
+    //    {
+    //      // loadRoles
+    //      ko.contextFor(document.getElementById("createuserdialog")).$data.reset();
+    //      ko.contextFor(document.getElementById("createuserdialog")).$data.loadRoles(data)
+
+    //      dialog.showModal();
+    //      dialog.style.width = "400px";
+    //    },
+    //    error: function (data)
+    //    {
+    //    }
+    //  });
   });
 
   dialog.querySelector('.close').addEventListener('click', function ()
@@ -309,59 +325,49 @@
 
   ko.extenders.required = function (target, overrideMessage)
   {
-    //add some sub-observables to our observable
     target.hasError = ko.observable();
     target.validationMessage = ko.observable();
-
-    //define a function to do validation
     function validate(newValue)
     {
       target.hasError(newValue ? false : true);
       target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
     }
-
-    //initial validation
     validate(target());
-
-    //validate whenever the value changes
     target.subscribe(validate);
-
-    //return the original observable
     return target;
   };
 
   function Create()
   {
     // validations.
-    var uri = 'api/users/create';
+
+    // json, check if its better to 'join' for a single "view moel"
     var obj = new Object();
     obj.name = document.getElementById('name').value;
     obj.username = document.getElementById('username').value;
     obj.email = document.getElementById('email').value;
-    obj.roles = createUserRoles;
-    var model = JSON.stringify(obj);
+    obj.roles = JSON.parse(ko.toJSON(createUserRoles));
 
-    $.ajax(
+
+    var model = JSON.stringify(obj);
+    const url = 'api/users/create';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8")
+    xhr.send(model);
+
+    xhr.onreadystatechange = function ()
     {
-      type: 'POST',
-      url: uri,
-      contentType: "application/json; charset=utf-8",
-      dataType: "json",
-      data: model,
-      success: function (data)
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 201)
       {
-        // after invoking webapi and if success, return json and push it to users.
-        addUser(data, 0);
+        addUser(JSON.parse(xhr.response), 0);
         ko.contextFor(document.getElementById("userlist")).$data.refresh();
         ko.contextFor(document.getElementById("userlist")).$data.sortUsers();
         message("User created.");
         var dialog = document.querySelector('dialog');
         dialog.close();
-      },
-      error: function (data)
-      {
       }
-    });
+    }
   }
 
   function createRoles(item, index)
