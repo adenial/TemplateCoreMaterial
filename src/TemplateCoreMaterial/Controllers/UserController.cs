@@ -78,7 +78,7 @@ namespace TemplateCoreMaterial.Controllers
     public IEnumerable<UserIndexViewModel> GetAll()
     {
       List<AspNetUser> users = this.userService.GetAll().ToList();
-      AspNetUser loggedUser = users.Find(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
+      AspNetUser loggedUser = users.Single(x => x.UserName.Equals(this.HttpContext.User.Identity.Name, StringComparison.CurrentCultureIgnoreCase));
       users.Remove(loggedUser);
       var orderUsers = users.OrderBy(x => x.Name);
 

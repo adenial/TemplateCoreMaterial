@@ -1,6 +1,5 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.AspNetCore.Authorization
-@*@model IEnumerable<UserIndexViewModel>*@
 @inject IAuthorizationService AuthorizationService
 @inject IViewLocalizer Localizer
 
@@ -14,7 +13,6 @@
     position: fixed;
     right: 20px;
     bottom: 0;
-    /*bottom: 100px;*/
     padding: 1rem;
     background-color: transparent;
     text-align: center;
@@ -48,24 +46,21 @@
 @section scripts
 {
   <script>
-    //var uri = 'api/users';
     $(document).ready(function ()
     {
-      var uri = 'api/users';
-      $.ajax(
+      const url = 'api/users';
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.send();
+
+      xhr.onreadystatechange = function ()
       {
-        url: uri,
-        type: 'GET',
-        contentType: "application/json;charset=utf-8",
-        success: function (data)
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
         {
-          data.forEach(addUser);
+          JSON.parse(xhr.response).forEach(addUser);
           ko.applyBindings(new ViewModel, document.getElementById('userlist'));
-        },
-        error: function (data)
-        {
         }
-      });
+      }
 
       function ViewModel()
       {
@@ -105,15 +100,8 @@
         var self = this;
         self.name = ko.observable("").extend({ required: "Please enter the name" });
         self.email = ko.observable("").extend({ required: "Please enter the email" });
-        self.username = ko.observable("").extend({ required: "Please enter the username" });
+        self.username = ko.observable("").extend({ email: "Invalid email format" });
         self.roles = ko.observableArray([]);
-
-        //self.refresh = function ()
-        //{
-        //  var data = self.roles().slice(0);
-        //  self.roles([]);
-        //  self.roles(data);
-        //};
 
         self.reset = function ()
         {
@@ -162,7 +150,7 @@
           <div class="mdl-textfield mdl-js-textfield" id="divemail">
             <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
             <div>
-              <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="email" />
+              <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="email" id="email" />
               <span data-bind='visible: email.hasError(), text: email.validationMessage' class="text-danger" />
             </div>
           </div>
@@ -276,25 +264,6 @@
         dialog.style.width = "400px";
       }
     }
-
-    //$.ajax(
-    //  {
-    //    url: usersUrl,
-    //    type: 'GET',
-    //    contentType: "application/json;charset=utf-8",
-    //    success: function (data)
-    //    {
-    //      // loadRoles
-    //      ko.contextFor(document.getElementById("createuserdialog")).$data.reset();
-    //      ko.contextFor(document.getElementById("createuserdialog")).$data.loadRoles(data)
-
-    //      dialog.showModal();
-    //      dialog.style.width = "400px";
-    //    },
-    //    error: function (data)
-    //    {
-    //    }
-    //  });
   });
 
   dialog.querySelector('.close').addEventListener('click', function ()
@@ -337,11 +306,29 @@
     return target;
   };
 
+  ko.extenders.email = function (target, overrideMessage)
+  {
+    target.hasError = ko.observable();
+    target.validationMessage = ko.observable();
+    function validate(newValue)
+    {
+      // check this.
+      target.hasError(function ()
+      {
+        // message is not beeing displayed.
+        newValue = $('#email').checkValidity();
+      });
+
+      target.validationMessage(newValue ? "" : overrideMessage || "Invalid email format");
+    }
+    validate(target());
+    target.subscribe(validate);
+    return target;
+  }
+
   function Create()
   {
-    // validations.
-
-    // json, check if its better to 'join' for a single "view moel"
+    // TODO: json, check if its better to 'join' for a single "view moel"
     var obj = new Object();
     obj.name = document.getElementById('name').value;
     obj.username = document.getElementById('username').value;
@@ -421,9 +408,6 @@
         {
           $el.removeClass('is-checked')
         }
-
-        // componentHandler.upgradeAllRegistered();
       }
-
     };
 </script>
