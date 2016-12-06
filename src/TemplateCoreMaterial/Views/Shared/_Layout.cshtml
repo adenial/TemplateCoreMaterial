@@ -84,13 +84,14 @@
 
   <environment names="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
+    @*<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>*@
+    @*<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/error.js" asp-append-version="true"></script>
     <script src="~/js/mdl/material.js"></script>
     <script src="~/js/mdl-custom-components/custom-components.js"></script>
 
   </environment>
-
   <environment names="Staging,Production">
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
             asp-fallback-src="~/lib/jquery/dist/jquery.min.js"

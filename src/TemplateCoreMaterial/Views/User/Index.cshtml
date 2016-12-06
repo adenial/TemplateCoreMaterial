@@ -45,6 +45,8 @@
 
 @section scripts
 {
+  @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
   <script>
     $(document).ready(function ()
     {
@@ -98,20 +100,25 @@
       function CreateUserViewModel()
       {
         var self = this;
-        self.name = ko.observable("").extend({ required: "Please enter the name" });
-        self.email = ko.observable("").extend({ required: "Please enter the email" });
-        self.username = ko.observable("").extend({ email: "Invalid email format" });
+        self.name = ko.observable(null);
+        self.email = ko.observable(null);
+        self.username = ko.observable(null);
         self.roles = ko.observableArray([]);
 
         self.reset = function ()
         {
           $('#divname').removeClass('is-dirty');
-          $('#divemail').removeClass('is-dirty');
-          $('#divusername').removeClass('is-dirty');
+          $('#divname').removeClass('is-invalid');
 
-          self.name("");
-          self.email("");
-          self.username("");
+          $('#divemail').removeClass('is-dirty');
+          $('#divemail').removeClass('is-invalid');
+
+          $('#divusername').removeClass('is-dirty');
+          $('#divusername').removeClass('is-invalid');
+
+          self.name(null);
+          self.email(null);
+          self.username(null);
         };
 
         self.loadRoles = function (data)
@@ -120,6 +127,99 @@
           data.forEach(createRoles)
           self.roles(createUserRoles);
         }
+
+        self.validate = function ()
+        {
+          var valid = false;
+          if (self.name() == null || self.name() === '')
+          {
+            if (!$('#divname').hasClass('is-dirty'))
+            {
+              $('#divname').addClass('is-dirty');
+            }
+
+            if (!$('#divname').hasClass('is-invalid'))
+            {
+              $('#divname').addClass('is-invalid');
+            }
+          }
+          else
+          {
+            if (!$('#divname').hasClass('is-dirty'))
+            {
+              $('#divname').addClass('is-dirty');
+            }
+
+            if ($('#divname').hasClass('is-invalid'))
+            {
+              $('#divname').removeClass('is-invalid');
+            }
+
+            valid = true;
+          }
+
+          if (self.username() == null || self.username() === '')
+          {
+            if (!$('#divusername').hasClass('is-dirty'))
+            {
+              $('#divusername').addClass('is-dirty');
+            }
+
+            if (!$('#divusername').hasClass('is-invalid'))
+            {
+              $('#divusername').addClass('is-invalid');
+            }
+
+            valid = false;
+          }
+          else
+          {
+            if (!$('#divusername').hasClass('is-dirty'))
+            {
+              $('#divusername').addClass('is-dirty');
+            }
+
+            if ($('#divusername').hasClass('is-invalid'))
+            {
+              $('#divusername').removeClass('is-invalid');
+            }
+
+            valid = true;
+          }
+
+          var emailValid = $('#email')[0].validity.valid;
+
+          if (emailValid)
+          {
+            if (!$('#divemail').hasClass('is-dirty'))
+            {
+              $('#divemail').addClass('is-dirty');
+            }
+
+            if ($('#divemail').hasClass('is-invalid'))
+            {
+              $('#divemail').removeClass('is-invalid');
+            }
+
+            valid = true;
+          }
+          else
+          {
+            if (!$('#divemail').hasClass('is-dirty'))
+            {
+              $('#divemail').addClass('is-dirty');
+            }
+
+            if (!$('#divemail').hasClass('is-invalid'))
+            {
+              $('#divemail').addClass('is-invalid');
+            }
+
+            valid = false;
+          }
+
+          return valid;
+        };
       }
 
       ko.applyBindings(new CreateUserViewModel(), document.getElementById('createuserdialog'))
@@ -129,49 +229,50 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--2-col"></div>
   <div class="mdl-cell mdl-cell--9-col">
-    <dialog class="mdl-dialog">
-      <div id="createuserdialog" class="mdl-dialog__content">
-        <div align="center">
-          <div class="mdl-textfield mdl-js-textfield" id="divname">
-            <input data-bind='textInput:name, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="name" />
-            <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
-            <span data-bind='visible: name.hasError(), text: name.validationMessage' class="text-danger" />
-          </div>
-
-        </div>
-        <div align="center">
-          <div class="mdl-textfield mdl-js-textfield" id="divusername">
-            <input data-bind='textInput:username, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="text" id="username" />
-            <label class="mdl-textfield__label" for="name">@Localizer["Username"]</label>
-            <span data-bind='visible: username.hasError(), text: username.validationMessage' class="text-danger" />
-          </div>
-        </div>
-        <div align="center">
-          <div class="mdl-textfield mdl-js-textfield" id="divemail">
-            <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
-            <div>
-              <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="email" id="email" />
-              <span data-bind='visible: email.hasError(), text: email.validationMessage' class="text-danger" />
+    <form id="createUserForm" action="#" novalidate>
+      <dialog class="mdl-dialog">
+        <div id="createuserdialog" class="mdl-dialog__content">
+          <div align="center">
+            <div class="mdl-textfield mdl-js-textfield" id="divname">
+              <input data-bind='textInput:name' class="mdl-textfield__input" type="text" id="name" required />
+              <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
+              <span class="mdl-textfield__error">@Localizer["Please enter the name"]</span>
             </div>
           </div>
+          <div align="center">
+            <div class="mdl-textfield mdl-js-textfield" id="divusername">
+              <input data-bind='textInput:username' class="mdl-textfield__input" type="text" id="username" required />
+              <label class="mdl-textfield__label" for="username">@Localizer["Username"]</label>
+              <span class="mdl-textfield__error">@Localizer["Please enter the username"]</span>
+            </div>
+          </div>
+          <div align="center">
+            <div class="mdl-textfield mdl-js-textfield" id="divemail">
+              <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
+              <div>
+                <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="email" id="email" required />
+                <span class="mdl-textfield__error">@Localizer["Invalid email format"]</span>
+              </div>
+            </div>
+          </div>
+          <ul class="mdl-list" data-bind="foreach: roles">
+            <li class="mdl-list__item">
+              <label data-bind="checkbox: check(), attr: {'for': id(), id: 'lbl'+ id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                <input class="mdl-checkbox__input" type="checkbox" data-bind='checked: check, attr: {id: id()}' />
+                <span class="mdl-checkbox__label">
+                  <span class="mdl-list__item-secondary-action" data-bind='text:name()'></span>
+                </span>
+              </label>
+            </li>
+          </ul>
         </div>
-        <ul class="mdl-list" data-bind="foreach: roles">
-          <li class="mdl-list__item">
-            <label data-bind="checkbox: check(), attr: {'for': id(), id: 'lbl'+ id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-              <input class="mdl-checkbox__input" type="checkbox" data-bind='checked: check, attr: {id: id()}' />
-              <span class="mdl-checkbox__label">
-                <span class="mdl-list__item-secondary-action" data-bind='text:name()'></span>
-              </span>
-            </label>
-          </li>
-        </ul>
-      </div>
-      <div class="mdl-dialog__actions">
-        <button type="button" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
-        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button close">Cancel</button>
-      </div>
-    </dialog>
-
+        <div class="mdl-dialog__actions">
+          @*<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>*@
+          <button type="submit" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button close">Cancel</button>
+        </div>
+      </dialog>
+    </form>
     <h4>@Localizer["Users"]</h4>
     <ul id="userlist" class="mdl-list" data-bind="foreach: userResult">
       <li data-bind="attr: {id: 'itemList-' + id() }" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
@@ -292,43 +393,47 @@
     });
   }
 
-  ko.extenders.required = function (target, overrideMessage)
-  {
-    target.hasError = ko.observable();
-    target.validationMessage = ko.observable();
-    function validate(newValue)
-    {
-      target.hasError(newValue ? false : true);
-      target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
-    }
-    validate(target());
-    target.subscribe(validate);
-    return target;
-  };
+  //ko.extenders.required = function (target, overrideMessage)
+  //{
+  //  target.hasError = ko.observable();
+  //  target.validationMessage = ko.observable();
+  //  function validate(newValue)
+  //  {
+  //    target.hasError(newValue ? false : true);
+  //    target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
+  //  }
+  //  validate(target());
+  //  target.subscribe(validate);
+  //  return target;
+  //};
 
-  ko.extenders.email = function (target, overrideMessage)
-  {
-    target.hasError = ko.observable();
-    target.validationMessage = ko.observable();
-    function validate(newValue)
-    {
-      // check this.
-      target.hasError(function ()
-      {
-        // message is not beeing displayed.
-        newValue = $('#email').checkValidity();
-      });
+  //ko.extenders.email = function (target, overrideMessage)
+  //{
+  //  target.hasError = ko.observable();
+  //  target.validationMessage = ko.observable();
+  //  function validate(newValue)
+  //  {
+  //    // check this.
+  //    target.hasError(function ()
+  //    {
+  //      // message is not beeing displayed.
+  //      newValue = $('#email').checkValidity();
+  //    });
 
-      target.validationMessage(newValue ? "" : overrideMessage || "Invalid email format");
-    }
-    validate(target());
-    target.subscribe(validate);
-    return target;
-  }
+  //    target.validationMessage(newValue ? "" : overrideMessage || "Invalid email format");
+  //  }
+  //  validate(target());
+  //  target.subscribe(validate);
+  //  return target;
+  //}
 
   function Create()
   {
-    // TODO: json, check if its better to 'join' for a single "view moel"
+    if (!ko.contextFor(document.getElementById("createuserdialog")).$data.validate())
+    {
+      return;
+    }
+
     var obj = new Object();
     obj.name = document.getElementById('name').value;
     obj.username = document.getElementById('username').value;
