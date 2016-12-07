@@ -229,7 +229,6 @@
 <div class="mdl-grid">
   <div class="mdl-cell mdl-cell--2-col"></div>
   <div class="mdl-cell mdl-cell--9-col">
-    <form id="createUserForm" action="#" novalidate>
       <dialog class="mdl-dialog">
         <div id="createuserdialog" class="mdl-dialog__content">
           <div align="center">
@@ -267,12 +266,11 @@
           </ul>
         </div>
         <div class="mdl-dialog__actions">
-          @*<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>*@
-          <button type="submit" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Create</button>
-          <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button close">Cancel</button>
+          <button type="button" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">Create</button>
+          <button type="button" class="mdl-button mdl-js-button close">Cancel</button>
+          
         </div>
       </dialog>
-    </form>
     <h4>@Localizer["Users"]</h4>
     <ul id="userlist" class="mdl-list" data-bind="foreach: userResult">
       <li data-bind="attr: {id: 'itemList-' + id() }" class="mdl-list__item mdl-list__item--two-line js-deletable mdl-shadow--4dp ">
