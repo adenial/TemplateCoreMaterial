@@ -15,6 +15,8 @@ namespace TemplateCoreMaterial.Controllers
   using TemplateCoreMaterial.Model;
   using TemplateCoreMaterial.Service.Interfaces;
   using TemplateCoreMaterial.ViewModels.User;
+  using System.Dynamic;
+  using Newtonsoft.Json;
 
   /// <summary>
   /// Class UserController.
@@ -98,10 +100,23 @@ namespace TemplateCoreMaterial.Controllers
     public IActionResult Insert([FromBody] UserCreateViewModel model)
     {
       var usernameExists = this.userService.CanInsertUserName(model.UserName);
-
       if (!usernameExists)
       {
-        return BadRequest();
+        dynamic expando = new ExpandoObject();
+        expando.attribute = "username";
+        expando.message = localizer["Username already exists."].Value;
+        var json = JsonConvert.SerializeObject(expando);
+        return BadRequest(json);
+      }
+
+      var canInsertEmail = this.userService.CanInsertEmail(model.Email);
+      if (!canInsertEmail)
+      {
+        dynamic expando = new ExpandoObject();
+        expando.attribute = "email";
+        expando.message = localizer["Email already exists."].Value;
+        var json = JsonConvert.SerializeObject(expando);
+        return BadRequest(json);
       }
 
       List<string> selectedRoles = model.Roles.Where(x => x.Check).Select(x => x.Id).ToList();
