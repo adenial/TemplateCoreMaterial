@@ -57,105 +57,88 @@ namespace TemplateCoreMaterial.Tests.Controllers.User
       Assert.IsType(typeof(UserCreateViewModel), result);
     }
 
-    /// <summary>
-    /// Tests the method Create POST Action of the class <see cref="UserController"/>
-    /// Tests the case when the email is already registered to another user.
+    //[Fact]
+    //public void CreatePostInvalidEmail()
+    //{
+    //  // setup
+    //  var model = this.CreateViewModel();
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  Mock<IUserService> userService = new Mock<IUserService>();
+    //  userService.Setup(x => x.CanInsertUserName(model.UserName)).Returns(true);
+    //  userService.Setup(x => x.CanInsertEmail(model.Email)).Returns(false);
+    //  userService.Setup(x => x.GetAllRoles()).Returns(this.CreateRoles());
+
+    //  // setup string for model validation (already registered username).
+    //  LocalizedString resourceString = new LocalizedString("There's already a user with the provided email.", "Test", false);
+    //  this.localizer.Setup(x => x["There's already a user with the provided email."]).Returns(resourceString);
+    //  this.controller = new UserController(userService.Object, this.localizer.Object);
+
+    //  // action
+    //  var result = (this.controller.Create(model) as ViewResult).Model as UserCreateViewModel;
+
+    //  // assert.
+    //  Assert.IsType(typeof(UserCreateViewModel), result);
+    //}
+
+    //[Fact]
+    //public void CreatePostInvalidModelState()
+    //{
+    //  // setup
+    //  var model = this.CreateViewModel();
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  Mock<IUserService> userService = new Mock<IUserService>();
+    //  this.controller = new UserController(userService.Object, this.localizer.Object);
+    //  this.controller.ModelState.AddModelError(string.Empty, "The Email is a required field.");
+
+    //  // action
+    //  var result = (this.controller.Create(model) as ViewResult).Model as UserCreateViewModel;
+
+    //  // assert
+    //  Assert.IsType(typeof(UserCreateViewModel), result);
+    //}
+
+    //[Fact]
+    //public void CreatePostInvalidUsername()
+    //{
+    //  // setup
+    //  var model = this.CreateViewModel();
+
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  Mock<IUserService> userService = new Mock<IUserService>();
+    //  userService.Setup(x => x.CanInsertUserName(model.UserName)).Returns(false);
+    //  userService.Setup(x => x.GetAllRoles()).Returns(this.CreateRoles());
+
+    //  // setup string for model validation (already registered username).
+    //  LocalizedString resourceString = new LocalizedString("There's already a user with the provided username.", "Test", false);
+    //  this.localizer.Setup(x => x["There's already a user with the provided username."]).Returns(resourceString);
+    //  this.controller = new UserController(userService.Object, this.localizer.Object);
+
+    //  // action
+    //  var result = (this.controller.Create(model) as ViewResult).Model as UserCreateViewModel;
+
+    //  // assert.
+    //  Assert.IsType(typeof(UserCreateViewModel), result);
+    //}
+
     /// </summary>
-    [Fact]
-    public void CreatePostInvalidEmail()
-    {
-      // setup
-      var model = this.CreateViewModel();
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      Mock<IUserService> userService = new Mock<IUserService>();
-      userService.Setup(x => x.CanInsertUserName(model.UserName)).Returns(true);
-      userService.Setup(x => x.CanInsertEmail(model.Email)).Returns(false);
-      userService.Setup(x => x.GetAllRoles()).Returns(this.CreateRoles());
+    //[Fact]
+    //public void CreatePostOk()
+    //{
+    //  // setup
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  var model = this.CreateViewModel();
+    //  Mock<IUserService> userService = new Mock<IUserService>();
+    //  userService.Setup(x => x.CanInsertUserName(model.UserName)).Returns(true);
+    //  userService.Setup(x => x.CanInsertEmail(model.Email)).Returns(true);
 
-      // setup string for model validation (already registered username).
-      LocalizedString resourceString = new LocalizedString("There's already a user with the provided email.", "Test", false);
-      this.localizer.Setup(x => x["There's already a user with the provided email."]).Returns(resourceString);
-      this.controller = new UserController(userService.Object, this.localizer.Object);
+    //  this.controller = new UserController(userService.Object, this.localizer.Object);
 
-      // action
-      var result = (this.controller.Create(model) as ViewResult).Model as UserCreateViewModel;
+    //  // action
+    //  var result = this.controller.Create(model) as RedirectToActionResult;
 
-      // assert.
-      Assert.IsType(typeof(UserCreateViewModel), result);
-    }
-
-    /// <summary>
-    /// Tests the method Create POST Action of the class <see cref="UserController"/>
-    /// Test case when the ModelState is invalid.
-    /// </summary>
-    [Fact]
-    public void CreatePostInvalidModelState()
-    {
-      // setup
-      var model = this.CreateViewModel();
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      Mock<IUserService> userService = new Mock<IUserService>();
-      this.controller = new UserController(userService.Object, this.localizer.Object);
-      this.controller.ModelState.AddModelError(string.Empty, "The Email is a required field.");
-
-      // action
-      var result = (this.controller.Create(model) as ViewResult).Model as UserCreateViewModel;
-
-      // assert
-      Assert.IsType(typeof(UserCreateViewModel), result);
-    }
-
-    /// <summary>
-    /// Test the method Create POST Action of the class <see cref="UserController"/>.
-    /// Assert the invoke of the method returns an instance of the class <see cref="UserCreateViewModel"/>.
-    /// Assert the ModelState error is due the field username.
-    /// </summary>
-    [Fact]
-    public void CreatePostInvalidUsername()
-    {
-      // setup
-      var model = this.CreateViewModel();
-
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      Mock<IUserService> userService = new Mock<IUserService>();
-      userService.Setup(x => x.CanInsertUserName(model.UserName)).Returns(false);
-      userService.Setup(x => x.GetAllRoles()).Returns(this.CreateRoles());
-
-      // setup string for model validation (already registered username).
-      LocalizedString resourceString = new LocalizedString("There's already a user with the provided username.", "Test", false);
-      this.localizer.Setup(x => x["There's already a user with the provided username."]).Returns(resourceString);
-      this.controller = new UserController(userService.Object, this.localizer.Object);
-
-      // action
-      var result = (this.controller.Create(model) as ViewResult).Model as UserCreateViewModel;
-
-      // assert.
-      Assert.IsType(typeof(UserCreateViewModel), result);
-    }
-
-    /// <summary>
-    /// Test the method Create POST Action of the class <see cref="UserController"/>.
-    /// Assert the invoke of the method redirects to Index.
-    /// Happy path.
-    /// </summary>
-    [Fact]
-    public void CreatePostOk()
-    {
-      // setup
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      var model = this.CreateViewModel();
-      Mock<IUserService> userService = new Mock<IUserService>();
-      userService.Setup(x => x.CanInsertUserName(model.UserName)).Returns(true);
-      userService.Setup(x => x.CanInsertEmail(model.Email)).Returns(true);
-
-      this.controller = new UserController(userService.Object, this.localizer.Object);
-
-      // action
-      var result = this.controller.Create(model) as RedirectToActionResult;
-
-      // assert
-      Assert.IsType(typeof(RedirectToActionResult), result);
-    }
+    //  // assert
+    //  Assert.IsType(typeof(RedirectToActionResult), result);
+    //}
 
     /// <summary>
     /// Creates the roles.

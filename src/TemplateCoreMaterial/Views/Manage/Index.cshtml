@@ -23,6 +23,10 @@
                 <a asp-controller="Manage" asp-action="SetPassword" class="btn-bracketed">@Localizer["Create"]</a>
             }
         </dd>
+      <dt>Language:</dt>
+      <dd>
+        @await Html.PartialAsync("_SelectLanguagePartial")
+      </dd>
         @*<dt>External Logins:</dt>
         <dd>
 

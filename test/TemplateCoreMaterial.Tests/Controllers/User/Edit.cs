@@ -74,113 +74,90 @@ namespace TemplateCoreMaterial.Tests.Controllers.User
       this.userRoleId = Guid.NewGuid().ToString();
     }
 
-    /// <summary>
-    /// Tests the method Edit of the class <see cref="UserController"/>.
-    /// Assert the invoke of the method returns an instance of the class <see cref="NotFoundResult"/>.
-    /// Test case when the provided user Id is empty or whitespace.
-    /// </summary>
-    [Fact]
-    public void EditInvalidParameter()
-    {
-      // setup
-      this.userService = new Mock<IUserService>();
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      this.controller = new UserController(this.userService.Object, this.localizer.Object);
+    //[Fact]
+    //public void EditInvalidParameter()
+    //{
+    //  // setup
+    //  this.userService = new Mock<IUserService>();
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  this.controller = new UserController(this.userService.Object, this.localizer.Object);
 
-      // action
-      var result = this.controller.Edit(" ") as NotFoundResult;
+    //  // action
+    //  var result = this.controller.Edit(" ") as NotFoundResult;
 
-      // assert
-      Assert.IsType(typeof(NotFoundResult), result);
-    }
+    //  // assert
+    //  Assert.IsType(typeof(NotFoundResult), result);
+    //}
 
-    /// <summary>
-    /// Tests the method Edit of the class <see cref="UserController"/>.
-    /// Asserts the invoke of the method returns an object of the type <see cref="UserEditViewModel"/>.
-    /// </summary>
-    [Fact]
-    public void EditOk()
-    {
-      // setup
-      this.userService = new Mock<IUserService>();
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //[Fact]
+    //public void EditOk()
+    //{
+    //  // setup
+    //  this.userService = new Mock<IUserService>();
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
 
-      this.userService.Setup(x => x.GetUserById(this.userId)).Returns(this.CreateUser());
-      this.userService.Setup(x => x.GetRolesByUserId(this.userId)).Returns(this.GetRoles());
-      this.userService.Setup(x => x.GetAllRoles()).Returns(this.GetAllRoles());
-      this.controller = new UserController(this.userService.Object, this.localizer.Object);
+    //  this.userService.Setup(x => x.GetUserById(this.userId)).Returns(this.CreateUser());
+    //  this.userService.Setup(x => x.GetRolesByUserId(this.userId)).Returns(this.GetRoles());
+    //  this.userService.Setup(x => x.GetAllRoles()).Returns(this.GetAllRoles());
+    //  this.controller = new UserController(this.userService.Object, this.localizer.Object);
 
-      // action
-      var result = (this.controller.Edit(this.userId) as ViewResult).Model as UserEditViewModel;
+    //  // action
+    //  var result = (this.controller.Edit(this.userId) as ViewResult).Model as UserEditViewModel;
 
-      // assert
-      Assert.IsType(typeof(UserEditViewModel), result);
-    }
+    //  // assert
+    //  Assert.IsType(typeof(UserEditViewModel), result);
+    //}
 
-    /// <summary>
-    /// Tests the method Edit of the class <see cref="UserController"/>
-    /// Asserts the invoke of the method returns an instance of <see cref="NotFoundResult"/>
-    /// Tests case when the user is not found with the provided Id
-    /// </summary>
-    [Fact]
-    public void EditUserNotFound()
-    {
-      // setup
-      this.userService = new Mock<IUserService>();
-      this.userService.Setup(x => x.GetUserById(this.userId)).Throws(new InvalidOperationException("Test"));
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      this.controller = new UserController(this.userService.Object, this.localizer.Object);
+    //[Fact]
+    //public void EditUserNotFound()
+    //{
+    //  // setup
+    //  this.userService = new Mock<IUserService>();
+    //  this.userService.Setup(x => x.GetUserById(this.userId)).Throws(new InvalidOperationException("Test"));
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  this.controller = new UserController(this.userService.Object, this.localizer.Object);
 
-      // action
-      var result = this.controller.Edit(this.userId) as NotFoundResult;
+    //  // action
+    //  var result = this.controller.Edit(this.userId) as NotFoundResult;
 
-      // assert
-      Assert.IsType(typeof(NotFoundResult), result);
-    }
+    //  // assert
+    //  Assert.IsType(typeof(NotFoundResult), result);
+    //}
 
-    /// <summary>
-    /// Tests the method Edit POST action of the class <see cref="UserController"/>.
-    /// Assert the invoke of the method returns an instance of the class <see cref="RedirectToActionResult"/>.
-    /// Happy Path
-    /// </summary>
-    [Fact]
-    public void EditPostOk()
-    {
-      // setup
-      var model = new UserEditViewModel { Id = this.userId, Name = "User for tests purposes", Roles = this.GetRolesEditView() };
-      this.userService = new Mock<IUserService>();
-      this.userService.Setup(x => x.GetUserRolesByUserId(this.userId)).Returns(this.GetUserRolesPost());
-      this.userService.Setup(x => x.GetAllRoles()).Returns(this.GetAllRolesPost());
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      this.controller = new UserController(this.userService.Object, this.localizer.Object);
+    //[Fact]
+    //public void EditPostOk()
+    //{
+    //  // setup
+    //  var model = new UserEditViewModel { Id = this.userId, Name = "User for tests purposes", Roles = this.GetRolesEditView() };
+    //  this.userService = new Mock<IUserService>();
+    //  this.userService.Setup(x => x.GetUserRolesByUserId(this.userId)).Returns(this.GetUserRolesPost());
+    //  this.userService.Setup(x => x.GetAllRoles()).Returns(this.GetAllRolesPost());
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  this.controller = new UserController(this.userService.Object, this.localizer.Object);
 
-      // action
-      var result = this.controller.Edit(model) as RedirectToActionResult;
+    //  // action
+    //  var result = this.controller.Edit(model) as RedirectToActionResult;
 
-      // assert
-      Assert.IsType(typeof(RedirectToActionResult), result);
-    }
+    //  // assert
+    //  Assert.IsType(typeof(RedirectToActionResult), result);
+    //}
 
-    /// <summary>
-    /// Tests the method Edit POST action of the class <see cref="UserController"/>.
-    /// Assert the invoke of the method returns an instance of the class <see cref="UserEditViewModel"/>.
-    /// </summary>
-    [Fact]
-    public void EditPostInvalidModel()
-    {
-      // setup
-      var model = new UserEditViewModel { Id = this.userId, Name = "User for tests purposes", Roles = this.GetRolesEditView() };
-      this.userService = new Mock<IUserService>();
-      this.localizer = new Mock<IStringLocalizer<UserController>>();
-      this.controller = new UserController(this.userService.Object, this.localizer.Object);
-      this.controller.ModelState.AddModelError(string.Empty, "Test");
+    //[Fact]
+    //public void EditPostInvalidModel()
+    //{
+    //  // setup
+    //  var model = new UserEditViewModel { Id = this.userId, Name = "User for tests purposes", Roles = this.GetRolesEditView() };
+    //  this.userService = new Mock<IUserService>();
+    //  this.localizer = new Mock<IStringLocalizer<UserController>>();
+    //  this.controller = new UserController(this.userService.Object, this.localizer.Object);
+    //  this.controller.ModelState.AddModelError(string.Empty, "Test");
 
-      // action
-      var result = (this.controller.Edit(model) as ViewResult).Model as UserEditViewModel;
+    //  // action
+    //  var result = (this.controller.Edit(model) as ViewResult).Model as UserEditViewModel;
 
-      // assert
-      Assert.IsType(typeof(UserEditViewModel), result);
-    }
+    //  // assert
+    //  Assert.IsType(typeof(UserEditViewModel), result);
+    //}
 
     /// <summary>
     /// Gets all roles post.

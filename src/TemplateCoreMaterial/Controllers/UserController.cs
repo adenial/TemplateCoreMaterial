@@ -104,7 +104,7 @@ namespace TemplateCoreMaterial.Controllers
       {
         dynamic expando = new ExpandoObject();
         expando.attribute = "username";
-        expando.message = localizer["Username already exists."].Value;
+        expando.message = localizer["Username already exists"].Value;
         var json = JsonConvert.SerializeObject(expando);
         return BadRequest(json);
       }
@@ -114,14 +114,14 @@ namespace TemplateCoreMaterial.Controllers
       {
         dynamic expando = new ExpandoObject();
         expando.attribute = "email";
-        expando.message = localizer["Email already exists."].Value;
+        expando.message = localizer["Email already exists"].Value;
         var json = JsonConvert.SerializeObject(expando);
         return BadRequest(json);
       }
 
       List<string> selectedRoles = model.Roles.Where(x => x.Check).Select(x => x.Id).ToList();
       ApplicationUser user = this.userService.Insert(model.Email, model.UserName, model.Name, selectedRoles);
-      var newUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };
+      var newUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };      
       return CreatedAtRoute("GetUser", new { id = newUser.Id }, newUser);
     }
 
@@ -140,69 +140,71 @@ namespace TemplateCoreMaterial.Controllers
       }
 
       var user = this.userService.GetUserById(id);
-      var selectedUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };
+      var selectedUser = new UserIndexViewModel
+      {
+        Email = user.Email,
+        Id = new Guid(user.Id),
+        Name = user.Name,
+        UserName = user.UserName
+      };
+
       return new ObjectResult(selectedUser);
     }
 
-    /// <summary>
-    /// Post Action of Create User
-    /// </summary>
-    /// <param name="model">The model.</param>
-    /// <returns>Redirect to Index or return View with ModelErrors.</returns>
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    [Authorize(Policy = "Create Users")]
-    public IActionResult Create(UserCreateViewModel model)
-    {
-      if (this.ModelState.IsValid)
-      {
-        bool canInsert = false;
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Policy = "Create Users")]
+    //public IActionResult Create(UserCreateViewModel model)
+    //{
+    //  if (this.ModelState.IsValid)
+    //  {
+    //    bool canInsert = false;
 
-        // validate if user does not exists with provided username.
-        canInsert = this.userService.CanInsertUserName(model.UserName);
-        if (canInsert)
-        {
-          // validate if user does not exists with provided email.
-          canInsert = this.userService.CanInsertEmail(model.Email);
+    //    // validate if user does not exists with provided username.
+    //    canInsert = this.userService.CanInsertUserName(model.UserName);
+    //    if (canInsert)
+    //    {
+    //      // validate if user does not exists with provided email.
+    //      canInsert = this.userService.CanInsertEmail(model.Email);
 
-          if (canInsert)
-          {
-            // get all the selected roles from model.Roles
-            List<UserRoleCreateViewModel> selectedRoles = model.Roles.Where(x => x.Check == true).ToList();
-            IEnumerable<string> rolesIds = selectedRoles.Select(x => x.Id).ToList();
+    //      if (canInsert)
+    //      {
+    //        // get all the selected roles from model.Roles
+    //        List<UserRoleCreateViewModel> selectedRoles = model.Roles.Where(x => x.Check == true).ToList();
+    //        IEnumerable<string> rolesIds = selectedRoles.Select(x => x.Id).ToList();
 
-            // if there are no more validations insert.
-            this.userService.Insert(model.Email, model.UserName, model.Name, rolesIds);
-            return this.RedirectToAction("Index");
-          }
-          else
-          {
-            this.ModelState.AddModelError("Email", this.localizer["There's already a user with the provided email."]);
-            var roles = this.userService.GetAllRoles();
+    //        // if there are no more validations insert.
+    //        this.userService.Insert(model.Email, model.UserName, model.Name, rolesIds);
+    //        return this.RedirectToAction("Index");
+    //      }
+    //      else
+    //      {
+    //        this.ModelState.AddModelError("Email", this.localizer["There's already a user with the provided email."]);
+    //        var roles = this.userService.GetAllRoles();
 
-            // load the roles. id and name.
-            var rolesViewmodel = this.GetRolesForViewModel(roles);
-            model.Roles = rolesViewmodel;
-            return this.View(model);
-          }
-        }
-        else
-        {
-          this.ModelState.AddModelError("UserName", this.localizer["There's already a user with the provided username."]);
-          var roles = this.userService.GetAllRoles();
+    //        // load the roles. id and name.
+    //        var rolesViewmodel = this.GetRolesForViewModel(roles);
+    //        model.Roles = rolesViewmodel;
+    //        return this.View(model);
+    //      }
+    //    }
+    //    else
+    //    {
+    //      this.ModelState.AddModelError("UserName", this.localizer["There's already a user with the provided username."]);
+    //      var roles = this.userService.GetAllRoles();
 
-          // load the roles. id and name.
-          var rolesViewmodel = this.GetRolesForViewModel(roles);
-          model.Roles = rolesViewmodel;
+    //      // load the roles. id and name.
+    //      var rolesViewmodel = this.GetRolesForViewModel(roles);
+    //      model.Roles = rolesViewmodel;
 
-          return this.View(model);
-        }
-      }
-      else
-      {
-        return this.View(model);
-      }
-    }
+    //      return this.View(model);
+    //    }
+    //  }
+    //  else
+    //  {
+    //    return this.View(model);
+    //  }
+    //}
 
     /// <summary>
     /// Deletes the user by its Id
@@ -335,6 +337,7 @@ namespace TemplateCoreMaterial.Controllers
     [Authorize(Policy = "View Users")]
     public IActionResult Index()
     {
+      ViewBag.Message = localizer["User created"].Value;
       return this.View();
     }
 

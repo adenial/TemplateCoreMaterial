@@ -315,8 +315,8 @@
         </ul>
       </div>
       <div class="mdl-dialog__actions">
-        <button type="button" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">Create</button>
-        <button type="button" class="mdl-button mdl-js-button close">Cancel</button>
+        <button type="button" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">@Localizer["Ok"]</button>
+        <button type="button" class="mdl-button mdl-js-button close">@Localizer["Cancel"]</button>
       </div>
     </dialog>
 
@@ -357,8 +357,8 @@
         </ul>
       </div>
       <div class="mdl-dialog__actions">
-        <button type="button" onclick="Edit()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">Update</button>
-        <button type="button" id="cancelEdit" class="mdl-button mdl-js-button closeEdit">Cancel</button>
+        <button type="button" onclick="Edit()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">@Localizer["Update"]</button>
+        <button type="button" id="cancelEdit" class="mdl-button mdl-js-button closeEdit">@Localizer["Cancel"]</button>
       </div>
     </dialog>
     <h4>@Localizer["Users"]</h4>
@@ -519,7 +519,7 @@
       },
       error: function (data)
       {
-        message("Error while deleting user")
+        message("Error")
       }
     });
   }
@@ -550,7 +550,9 @@
         addUser(JSON.parse(xhr.response), 0);
         ko.contextFor(document.getElementById("userlist")).$data.refresh();
         ko.contextFor(document.getElementById("userlist")).$data.sortUsers();
-        message("User created.");
+
+        // change for localizer.
+        message('@ViewBag.Message');
         var dialog = document.querySelector('dialog');
         dialog.close();
       }
