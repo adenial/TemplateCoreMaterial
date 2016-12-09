@@ -47,12 +47,15 @@
     {
       display: block;
     }
+
+  .listcheckbox li
+  {
+    border: hidden !important;
+  }
 </style>
 
 @section scripts
 {
-  @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
-
   <script>
     $(document).ready(function ()
     {
@@ -102,6 +105,41 @@
           });
         };
       };
+
+      function EditUserViewModel()
+      {
+        var self = this;
+        self.id = ko.observable(null);
+        self.name = ko.observable(null);
+        self.email = ko.observable(null);
+        self.username = ko.observable(null);
+        self.roles = ko.observableArray([]);
+
+        self.reset = function ()
+        {
+          $('#editdivname').addClass('is-dirty');
+          $('#editdivname').removeClass('is-invalid');
+
+          $('#editdivemail').addClass('is-dirty');
+          $('#editdivemail').removeClass('is-invalid');
+
+          $('#editdivusername').addClass('is-dirty');
+          $('#editdivusername').removeClass('is-invalid');
+
+          self.name(null);
+          self.email(null);
+          self.username(null);
+          self.id(null);
+        };
+
+        self.loadUser = function (data)
+        {
+          self.id(data.id);
+          self.name(data.name);
+          self.email(data.email);
+          self.username(data.userName);
+        }
+      }
 
       function CreateUserViewModel()
       {
@@ -229,6 +267,7 @@
       }
 
       ko.applyBindings(new CreateUserViewModel(), document.getElementById('createuserdialog'))
+      ko.applyBindings(new EditUserViewModel(), document.getElementById('edituserdialog'))
     });
   </script>
 }
@@ -240,23 +279,23 @@
   </div>
   <div class="mdl-cell mdl-cell--9-col">
     <dialog class="mdl-dialog">
-      <div id="createuserdialog" class="mdl-dialog__content">
+      <div id="createuserdialog" class="mdl-dialog__content listcheckbox">
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield" id="divname">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="divname">
             <input data-bind='textInput:name' class="mdl-textfield__input" type="text" id="name" required />
             <label class="mdl-textfield__label" for="name">@Localizer["Name"]</label>
             <span id="errrlblname" class="mdl-textfield__error">@Localizer["Please enter the name"]</span>
           </div>
         </div>
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield" id="divusername">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="divusername">
             <input data-bind='textInput:username' class="mdl-textfield__input" type="text" id="username" required />
             <label class="mdl-textfield__label" for="username">@Localizer["Username"]</label>
             <span id="errrlblusername" class="mdl-textfield__error">@Localizer["Please enter the username"]</span>
           </div>
         </div>
         <div align="center">
-          <div class="mdl-textfield mdl-js-textfield" id="divemail">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="divemail">
             <label class="mdl-textfield__label" for="name">@Localizer["Email"]</label>
             <div>
               <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="email" id="email" required />
@@ -278,7 +317,48 @@
       <div class="mdl-dialog__actions">
         <button type="button" onclick="Create()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">Create</button>
         <button type="button" class="mdl-button mdl-js-button close">Cancel</button>
+      </div>
+    </dialog>
 
+    <dialog id="edituserdialog" class="mdl-dialog">
+      <div class="mdl-dialog__content listcheckbox">
+        <div align="center">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="editdivname">
+            <input data-bind='textInput:name' class="mdl-textfield__input" type="text" id="editname" required />
+            <label class="mdl-textfield__label" for="editname">@Localizer["Name"]</label>
+            <span id="editerrrlblname" class="mdl-textfield__error">@Localizer["Please enter the name"]</span>
+          </div>
+        </div>
+        <div align="center">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="editdivusername">
+            <input data-bind='textInput:username' class="mdl-textfield__input" type="text" id="editusername" required />
+            <label class="mdl-textfield__label" for="editusername">@Localizer["Username"]</label>
+            <span id="editerrrlblusername" class="mdl-textfield__error">@Localizer["Please enter the username"]</span>
+          </div>
+        </div>
+        <div align="center">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="editdivemail">
+            <label class="mdl-textfield__label" for="editemail">@Localizer["Email"]</label>
+            <div>
+              <input data-bind='textInput:email, valueUpdate: "afterkeydown"' class="mdl-textfield__input" type="email" id="editemail" required />
+              <span id="editerrrlblemail" class="mdl-textfield__error">@Localizer["Invalid email format"]</span>
+            </div>
+          </div>
+        </div>
+        <ul class="mdl-list" data-bind="foreach: roles">
+          <li class="mdl-list__item">
+            <label data-bind="checkbox: check(), attr: {'for': id(), id: 'lbl'+ id() }" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+              <input class="mdl-checkbox__input" type="checkbox" data-bind='checked: check, attr: {id: id()}' />
+              <span class="mdl-checkbox__label">
+                <span class="mdl-list__item-secondary-action" data-bind='text:name()'></span>
+              </span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      <div class="mdl-dialog__actions">
+        <button type="button" onclick="Edit()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button">Update</button>
+        <button type="button" id="cancelEdit" class="mdl-button mdl-js-button closeEdit">Cancel</button>
       </div>
     </dialog>
     <h4>@Localizer["Users"]</h4>
@@ -327,11 +407,42 @@
 <script type="text/javascript">
   var users = [];
   var createUserRoles = [];
+  var editUserRoles = [];
   var createUser;
   function addUser(item, index)
   {
     users.push(new User(item.id, item.email, item.name));
   }
+
+  function EditUser(id)
+  {
+    // get user info by id.
+    var usersUrl = 'api/users';
+    const url = `${usersUrl}/${id}`;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.send();
+
+    xhr.onreadystatechange = function ()
+    {
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
+      {
+        var jsonObject = JSON.parse(xhr.response);
+        ko.contextFor(document.getElementById("edituserdialog")).$data.reset();
+        ko.contextFor(document.getElementById("edituserdialog")).$data.loadUser(jsonObject)
+        editdialog.style.width = "400px";
+        editdialog.showModal();
+      }
+
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 400)
+      {
+        message('Error');
+        return;
+      }
+    }
+  }
+
   function User(id, email, name)
   {
     var self = this;
@@ -340,13 +451,25 @@
     self.email = ko.observable(email);
     self.redirect = function ()
     {
-      window.location.href = "User/Edit/" + self.id();
+      EditUser(self.id())
     }
     self.remove = function ()
     {
       deleteUser(self.id());
     }
   }
+
+  // dialogs
+  var editdialog = document.querySelector('#edituserdialog');
+  if (!editdialog.showModal)
+  {
+    dialogPolyfill.registerDialog(editdialog);
+  }
+
+  editdialog.querySelector('#cancelEdit').addEventListener('click', function ()
+  {
+    editdialog.close();
+  });
 
   var dialog = document.querySelector('dialog');
   var showDialogButton = document.querySelector('#show-dialog');
@@ -368,9 +491,8 @@
       {
         ko.contextFor(document.getElementById("createuserdialog")).$data.reset();
         ko.contextFor(document.getElementById("createuserdialog")).$data.loadRoles(JSON.parse(xhr.response))
-
-        dialog.showModal();
         dialog.style.width = "400px";
+        dialog.showModal();
       }
     }
   });
@@ -449,10 +571,11 @@
     }
   }
 
+  function editRoles(item, index)
+  { editUserRoles.push(new Role(item)) }
+
   function createRoles(item, index)
-  {
-    createUserRoles.push(new Role(item))
-  }
+  { createUserRoles.push(new Role(item)) }
 
   function Role(item)
   {
