@@ -81,6 +81,74 @@ namespace TemplateCoreMaterial.Service.Implement
     }
 
     /// <summary>
+    /// Determines whether this instance [can update email] the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="email">The email.</param>
+    /// <returns><c>true</c> if this instance [can update email] the specified identifier; otherwise, <c>false</c>.</returns>
+    public bool CanUpdateEmail(string id, string email)
+    {
+      bool canUpdate = false;
+
+      // query all users.
+      var query = this.unitOfWork.UserRepository.GetAll().ToList();
+
+      // query the user by its email
+      var user = query.Where(x => x.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase)).SingleOrDefault();
+
+
+      if (user == null)
+      {
+        // no user found by the provided Id, so can update = true;
+        canUpdate = true;
+      }
+      else
+      {
+        // if user is found, compare the user id, if its the same, can update true (the user specified the same email)
+        if (user.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+        {
+          canUpdate = true;
+        }
+      }
+
+      return canUpdate;
+    }
+
+    /// <summary>
+    /// Determines whether this instance [can update username] the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="userName">Name of the user.</param>
+    /// <returns><c>true</c> if this instance [can update username] the specified identifier; otherwise, <c>false</c>.</returns>
+    public bool CanUpdateUsername(string id, string userName)
+    {
+      bool canUpdate = false;
+
+      // query all users.
+      var query = this.unitOfWork.UserRepository.GetAll().ToList();
+
+      // query the user by its email
+      var user = query.Where(x => x.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase)).SingleOrDefault();
+
+
+      if (user == null)
+      {
+        // no user found by the provided Id, so can update = true;
+        canUpdate = true;
+      }
+      else
+      {
+        // if user is found, compare the user id, if its the same, can update true (the user specified the same email)
+        if (user.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+        {
+          canUpdate = true;
+        }
+      }
+
+      return canUpdate;
+    }
+
+    /// <summary>
     /// Deletes the user by its identifier.
     /// </summary>
     /// <param name="id">The identifier.</param>
@@ -264,21 +332,29 @@ namespace TemplateCoreMaterial.Service.Implement
     /// <summary>
     /// Updates the user information.
     /// </summary>
-    /// <param name="userId">The user identifier.</param>
+    /// <param name="id">The identifier.</param>
     /// <param name="name">The name.</param>
-    public void UpdateUserInfo(string userId, string name)
+    /// <param name="userName">Name of the user.</param>
+    /// <param name="email">The email.</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public void UpdateUserInfo(string id, string name, string userName, string email)
     {
-      var user = this.unitOfWork.UserRepository.FindBy(x => x.Id.Equals(userId, StringComparison.CurrentCultureIgnoreCase));
+      var user = this.unitOfWork.UserRepository.FindBy(x => x.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase));
 
       if (user != null)
       {
+        user.NormalizedUserName = userName;
+        user.UserName = userName;
+
+        user.NormalizedEmail = email;
+        user.Email = email;
         user.Name = name;
         this.unitOfWork.UserRepository.Update(user);
         this.unitOfWork.Commit();
       }
       else
       {
-        throw new InvalidOperationException(string.Format("User not found with the provided Id, provided Id: {0}", userId));
+        throw new InvalidOperationException(string.Format("User not found with the provided Id, provided Id: {0}", id));
       }
     }
 

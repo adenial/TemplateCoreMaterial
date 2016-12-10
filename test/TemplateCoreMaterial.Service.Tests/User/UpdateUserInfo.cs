@@ -98,12 +98,14 @@ namespace TemplateCore.Service.Tests.User
     {
       // setup
       string editedName = "User for test purposes TEST";
+      string newUsername = "test1";
+      string newEmail = "test1@test.com";
       TemplateDbContext context = new TemplateDbContext(this.contextOptions);
       IUnitOfWork<TemplateDbContext> unitOfWork = new UnitOfWork<TemplateDbContext>(context);
       this.userService = new UserService(unitOfWork);
 
       // action
-      this.userService.UpdateUserInfo(this.userId, editedName);
+      this.userService.UpdateUserInfo(this.userId, editedName, newUsername, newEmail);
 
       var query = this.userService.GetAll();
 
@@ -119,12 +121,14 @@ namespace TemplateCore.Service.Tests.User
     public void UpdateUserInfoThrowsException()
     {
       // setup
+      string newUsername = "test1";
+      string newEmail = "test1@test.com";
       TemplateDbContext context = new TemplateDbContext(this.contextOptions);
       IUnitOfWork<TemplateDbContext> unitOfWork = new UnitOfWork<TemplateDbContext>(context);
       this.userService = new UserService(unitOfWork);
 
       // action && assert
-      Assert.Throws<InvalidOperationException>(() => this.userService.UpdateUserInfo(Guid.NewGuid().ToString(), "Test"));
+      Assert.Throws<InvalidOperationException>(() => this.userService.UpdateUserInfo(Guid.NewGuid().ToString(), "Test", newUsername, newEmail));
     }
   }
 }

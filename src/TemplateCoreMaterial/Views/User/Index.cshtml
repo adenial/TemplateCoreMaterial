@@ -97,6 +97,19 @@
           });
         }
 
+        self.updateUserInfo = function (data)
+        {
+          // get user from self.userResult by its id.
+          for (var i = 0, iLen = self.userResult().length; i < iLen; i++)
+          {
+            if (self.userResult()[i].id() == data.id)
+            {
+              self.userResult()[i].email(data.email)
+              self.userResult()[i].name(data.name)
+            }
+          }
+        }
+
         self.sortUsers = function ()
         {
           self.userResult.sort(function (user1, user2)
@@ -137,8 +150,74 @@
           self.id(data.id);
           self.name(data.name);
           self.email(data.email);
-          self.username(data.userName);
+          self.username(data.username);
+          editUserRoles = [];
+          data.roles.forEach(editRoles)
+          self.roles(editUserRoles);
         }
+
+        self.validate = function ()
+        {
+          var valid = false;
+          if (self.name() == null || self.name() === '')
+          {
+            if (!$('#editdivname').hasClass('is-invalid'))
+            {
+              $('#editdivname').addClass('is-invalid');
+            }
+          }
+          else
+          {
+            if ($('#editdivname').hasClass('is-invalid'))
+            {
+              $('#editdivname').removeClass('is-invalid');
+            }
+
+            valid = true;
+          }
+
+          if (self.username() == null || self.username() === '')
+          {
+            if (!$('#editdivusername').hasClass('is-invalid'))
+            {
+              $('#editdivusername').addClass('is-invalid');
+            }
+
+            valid = false;
+          }
+          else
+          {
+            if ($('#editdivusername').hasClass('is-invalid'))
+            {
+              $('#editdivusername').removeClass('is-invalid');
+            }
+
+            valid = true;
+          }
+
+          var emailValid = $('#editemail')[0].validity.valid;
+
+          if (emailValid)
+          {
+            if ($('#divemail').hasClass('is-invalid'))
+            {
+              $('#divemail').removeClass('is-invalid');
+            }
+
+            valid = true;
+          }
+          else
+          {
+            if (!$('#divemail').hasClass('is-invalid'))
+            {
+              $('#divemail').addClass('is-invalid');
+            }
+
+            valid = false;
+          }
+
+          return valid;
+        };
       }
 
       function CreateUserViewModel()
@@ -419,7 +498,6 @@
     // get user info by id.
     var usersUrl = 'api/users';
     const url = `${usersUrl}/${id}`;
-
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.send();
@@ -524,6 +602,48 @@
     });
   }
 
+  function Edit()
+  {
+    // validate input.
+    if (!ko.contextFor(document.getElementById("edituserdialog")).$data.validate())
+    {
+      return;
+    }
+
+    // create object and update.
+    var obj = new Object();
+    obj.id = ko.contextFor(document.getElementById("edituserdialog")).$data.id();
+    obj.name = ko.contextFor(document.getElementById("edituserdialog")).$data.name();
+    obj.username = ko.contextFor(document.getElementById("edituserdialog")).$data.username();
+    obj.email = ko.contextFor(document.getElementById("edituserdialog")).$data.email();
+    obj.roles = JSON.parse(ko.toJSON(editUserRoles));
+    var model = JSON.stringify(obj);
+    var usersUrl = 'api/users';
+    const url = `${usersUrl}/${obj.id}`;
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', url);
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    xhr.send(model);
+    xhr.onreadystatechange = function ()
+    {
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 204)
+      {
+        // update userlist (UserView())
+        ko.contextFor(document.getElementById("userlist")).$data.updateUserInfo(obj);
+        ko.contextFor(document.getElementById("userlist")).$data.sortUsers();
+        message('@ViewBag.UpdatedUserMessage');
+        editdialog.close();
+      }
+
+      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 400)
+      {
+        var json = JSON.parse(xhr.response);
+        message(json.message);
+        return;
+      }
+    }
+  }
+
   function Create()
   {
     if (!ko.contextFor(document.getElementById("createuserdialog")).$data.validate())
@@ -552,7 +672,7 @@
         ko.contextFor(document.getElementById("userlist")).$data.sortUsers();
 
         // change for localizer.
-        message('@ViewBag.Message');
+        message('@ViewBag.CreatedUserMessage');
         var dialog = document.querySelector('dialog');
         dialog.close();
       }

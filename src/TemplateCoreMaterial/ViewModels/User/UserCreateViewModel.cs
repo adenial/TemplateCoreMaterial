@@ -15,6 +15,12 @@ namespace TemplateCoreMaterial.ViewModels.User
   public class UserCreateViewModel
   {
     /// <summary>
+    /// User Id
+    /// </summary>
+    [JsonProperty("id")]
+    public string Id { get; set; }
+
+    /// <summary>
     /// Gets or sets the name.
     /// </summary>
     /// <value>The name.</value>

@@ -92,10 +92,28 @@ namespace TemplateCoreMaterial.Service.Interfaces
     void UpdateUserRoles(List<IdentityUserRole<string>> newRolesToInsert, List<IdentityUserRole<string>> rolesToDelete);
 
     /// <summary>
+    /// Determines whether this instance [can update email] the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="email">The email.</param>
+    /// <returns><c>true</c> if this instance [can update email] the specified identifier; otherwise, <c>false</c>.</returns>
+    bool CanUpdateEmail(string id, string email);
+
+    /// <summary>
+    /// Determines whether this instance [can update username] the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="userName">Name of the user.</param>
+    /// <returns><c>true</c> if this instance [can update username] the specified identifier; otherwise, <c>false</c>.</returns>
+    bool CanUpdateUsername(string id, string userName);
+
+    /// <summary>
     /// Updates the user information.
     /// </summary>
-    /// <param name="userId">The user identifier.</param>
+    /// <param name="id">The identifier.</param>
     /// <param name="name">The name.</param>
-    void UpdateUserInfo(string userId, string name);
+    /// <param name="userName">Name of the user.</param>
+    /// <param name="email">The email.</param>
+    void UpdateUserInfo(string id, string name, string userName, string email);
   }
 }

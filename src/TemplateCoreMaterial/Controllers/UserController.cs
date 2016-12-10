@@ -121,7 +121,7 @@ namespace TemplateCoreMaterial.Controllers
 
       List<string> selectedRoles = model.Roles.Where(x => x.Check).Select(x => x.Id).ToList();
       ApplicationUser user = this.userService.Insert(model.Email, model.UserName, model.Name, selectedRoles);
-      var newUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };      
+      var newUser = new UserIndexViewModel { Email = user.Email, Id = new Guid(user.Id), Name = user.Name, UserName = user.UserName };
       return CreatedAtRoute("GetUser", new { id = newUser.Id }, newUser);
     }
 
@@ -139,72 +139,31 @@ namespace TemplateCoreMaterial.Controllers
         return BadRequest();
       }
 
+      // GET UserCreateViewModel
       var user = this.userService.GetUserById(id);
-      var selectedUser = new UserIndexViewModel
+
+      // universe of roles.
+      var allRoles = this.userService.GetAllRoles();
+
+      // roles the user already has.
+      var userRoles = this.userService.GetRolesByUserId(id);
+
+      // compare all the roles against the roles the user has, mark as true.
+      var rolesViewModel = GetRolesForViewModel(allRoles);
+
+      var test = this.GetUserRolesForEditViewModel(userRoles, allRoles);
+
+      var returnUser = new UserCreateViewModel
       {
+        Id = user.Id,
         Email = user.Email,
-        Id = new Guid(user.Id),
         Name = user.Name,
-        UserName = user.UserName
+        UserName = user.UserName,
+        Roles = test
       };
 
-      return new ObjectResult(selectedUser);
+      return new ObjectResult(returnUser);
     }
-
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //[Authorize(Policy = "Create Users")]
-    //public IActionResult Create(UserCreateViewModel model)
-    //{
-    //  if (this.ModelState.IsValid)
-    //  {
-    //    bool canInsert = false;
-
-    //    // validate if user does not exists with provided username.
-    //    canInsert = this.userService.CanInsertUserName(model.UserName);
-    //    if (canInsert)
-    //    {
-    //      // validate if user does not exists with provided email.
-    //      canInsert = this.userService.CanInsertEmail(model.Email);
-
-    //      if (canInsert)
-    //      {
-    //        // get all the selected roles from model.Roles
-    //        List<UserRoleCreateViewModel> selectedRoles = model.Roles.Where(x => x.Check == true).ToList();
-    //        IEnumerable<string> rolesIds = selectedRoles.Select(x => x.Id).ToList();
-
-    //        // if there are no more validations insert.
-    //        this.userService.Insert(model.Email, model.UserName, model.Name, rolesIds);
-    //        return this.RedirectToAction("Index");
-    //      }
-    //      else
-    //      {
-    //        this.ModelState.AddModelError("Email", this.localizer["There's already a user with the provided email."]);
-    //        var roles = this.userService.GetAllRoles();
-
-    //        // load the roles. id and name.
-    //        var rolesViewmodel = this.GetRolesForViewModel(roles);
-    //        model.Roles = rolesViewmodel;
-    //        return this.View(model);
-    //      }
-    //    }
-    //    else
-    //    {
-    //      this.ModelState.AddModelError("UserName", this.localizer["There's already a user with the provided username."]);
-    //      var roles = this.userService.GetAllRoles();
-
-    //      // load the roles. id and name.
-    //      var rolesViewmodel = this.GetRolesForViewModel(roles);
-    //      model.Roles = rolesViewmodel;
-
-    //      return this.View(model);
-    //    }
-    //  }
-    //  else
-    //  {
-    //    return this.View(model);
-    //  }
-    //}
 
     /// <summary>
     /// Deletes the user by its Id
@@ -228,106 +187,94 @@ namespace TemplateCoreMaterial.Controllers
       }
     }
 
+    /// <summary>
+    /// Updates the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="model">The model.</param>
+    /// <returns>IActionResult.</returns>
+    [HttpPut]
+    [Route("/api/users/{id}")]
     //[Authorize(Policy = "Update Users")]
-    //public IActionResult Edit(string id)
-    //{
-    //  // validate if string is not null or empty.
-    //  if (string.IsNullOrWhiteSpace(id))
-    //  {
-    //    // return 404.
-    //    return this.NotFound();
-    //  }
+    public IActionResult Update(string id, [FromBody]UserCreateViewModel model)
+    {
+      // validate inputs.
+      if (!string.IsNullOrWhiteSpace(model.Email))
+      {
+        // validate if user email can be updated.
+        var emailUpdate = this.userService.CanUpdateEmail(model.Id, model.Email);
+        if (!emailUpdate)
+        {
+          // return 400 and message.
+          dynamic expando = new ExpandoObject();
+          expando.attribute = "email";
+          expando.message = localizer["Email already exists"].Value;
+          var json = JsonConvert.SerializeObject(expando);
+          return BadRequest(json);
+        }
+      }
 
-    //  // otherwise search the user given the id.
-    //  ApplicationUser user = null;
+      if (!string.IsNullOrWhiteSpace(model.UserName))
+      {
+        var usernameUpdate = this.userService.CanUpdateUsername(model.Id, model.UserName);
 
-    //  try
-    //  {
-    //    user = this.userService.GetUserById(id);
-    //  }
-    //  catch (InvalidOperationException)
-    //  {
-    //    return this.NotFound();
-    //  }
+        if (!usernameUpdate)
+        {
+          dynamic expando = new ExpandoObject();
+          expando.message = localizer["Username already exists"].Value;
+          var json = JsonConvert.SerializeObject(expando);
+          return BadRequest(json);
+        }
+      }
 
-    //  // define which information can be updated, if username and email can be updated, validate at post that no user already has the new username or email.
-    //  // id cannot be updated.
-    //  var model = new UserEditViewModel { Id = user.Id, Name = user.Name };
 
-    //  // roles are empty.... (why Identity.. why..)
-    //  var userRoles = this.userService.GetRolesByUserId(id);
-    //  var allRoles = this.userService.GetAllRoles();
+      var userRoles = this.userService.GetUserRolesByUserId(model.Id);
 
-    //  model.Roles = this.GetUserRolesForEditViewModel(userRoles, allRoles);
+      var selectedRoles = model.Roles.Where(x => x.Check == true).ToList();
+      var unselectedRoles = model.Roles.Where(x => x.Check == false).ToList();
 
-    //  return this.View(model);
-    //}
+      List<IdentityUserRole<string>> rolesToDelete = new List<IdentityUserRole<string>>();
+      List<IdentityUserRole<string>> newRolesToInsert = new List<IdentityUserRole<string>>();
 
-    //[ValidateAntiForgeryToken]
-    //[HttpPost]
-    //[Authorize(Policy = "Update Users")]
-    //public IActionResult Edit(UserEditViewModel model)
-    //{
-    //  if (this.ModelState.IsValid)
-    //  {
-    //    // for now the name of the user can be updated too..
+      var roles = this.userService.GetAllRoles();
 
-    //    /*the roles have to be updated:
-    //    the model has the property Roles which specifiy the new roles (added or deleted) will have.
-    //    user id model.Id*/
+      // query against the universe of roles.
+      foreach (var roleDb in roles)
+      {
+        foreach (var selectedRole in selectedRoles)
+        {
+          if (roleDb.Id.Equals(selectedRole.Id))
+          {
+            var query = userRoles.Where(x => x.RoleId.Equals(selectedRole.Id)).SingleOrDefault();
 
-    //    // UserRoles<string, string> identity
-    //    var userRoles = this.userService.GetUserRolesByUserId(model.Id);
+            if (query == null)
+            {
+              // add
+              newRolesToInsert.Add(new IdentityUserRole<string> { UserId = model.Id, RoleId = selectedRole.Id });
+            }
+          }
+        }
+      }
 
-    //    var selectedRoles = model.Roles.Where(x => x.Check == true).ToList();
-    //    var unselectedRoles = model.Roles.Where(x => x.Check == false).ToList();
+      // roles to delete.
+      foreach (var userRole in userRoles)
+      {
+        foreach (var unselectedRole in unselectedRoles)
+        {
+          if (userRole.RoleId.Equals(unselectedRole.Id))
+          {
+            // roles to delete.
+            rolesToDelete.Add(new IdentityUserRole<string> { UserId = model.Id, RoleId = userRole.RoleId });
+          }
+        }
+      }
 
-    //    List<IdentityUserRole<string>> rolesToDelete = new List<IdentityUserRole<string>>();
-    //    List<IdentityUserRole<string>> newRolesToInsert = new List<IdentityUserRole<string>>();
+      this.userService.UpdateUserRoles(newRolesToInsert, rolesToDelete);
+      this.userService.UpdateUserInfo(model.Id, model.Name, model.UserName, model.Email);
 
-    //    var roles = this.userService.GetAllRoles();
-
-    //    // query against the universe of roles.
-    //    foreach (var roleDb in roles)
-    //    {
-    //      foreach (var selectedRole in selectedRoles)
-    //      {
-    //        if (roleDb.Id.Equals(selectedRole.Id))
-    //        {
-    //          var query = userRoles.Where(x => x.RoleId.Equals(selectedRole.Id)).SingleOrDefault();
-
-    //          if (query == null)
-    //          {
-    //            // add
-    //            newRolesToInsert.Add(new IdentityUserRole<string> { UserId = model.Id, RoleId = selectedRole.Id });
-    //          }
-    //        }
-    //      }
-    //    }
-
-    //    // roles to delete.
-    //    foreach (var userRole in userRoles)
-    //    {
-    //      foreach (var unselectedRole in unselectedRoles)
-    //      {
-    //        if (userRole.RoleId.Equals(unselectedRole.Id))
-    //        {
-    //          // roles to delete.
-    //          rolesToDelete.Add(new IdentityUserRole<string> { UserId = model.Id, RoleId = userRole.RoleId });
-    //        }
-    //      }
-    //    }
-
-    //    this.userService.UpdateUserRoles(newRolesToInsert, rolesToDelete);
-    //    this.userService.UpdateUserInfo(model.Id, model.Name);
-
-    //    return this.RedirectToAction("Index");
-    //  }
-    //  else
-    //  {
-    //    return this.View(model);
-    //  }
-    //}
+      // taken from https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api 
+      return new NoContentResult();
+    }
 
     /// <summary>
     /// Index Page
@@ -337,7 +284,8 @@ namespace TemplateCoreMaterial.Controllers
     [Authorize(Policy = "View Users")]
     public IActionResult Index()
     {
-      ViewBag.Message = localizer["User created"].Value;
+      ViewBag.CreatedUserMessage = localizer["User created"].Value;
+      ViewBag.UpdatedUserMessage = localizer["User updated"].Value;
       return this.View();
     }
 

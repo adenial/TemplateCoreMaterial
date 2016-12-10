@@ -129,4 +129,7 @@
   <data name="Username already exists" xml:space="preserve">
     <value>El nombre de usuario ya existe</value>
   </data>
+  <data name="User updated" xml:space="preserve">
+    <value>Usuario actualizado</value>
+  </data>
 </root>
