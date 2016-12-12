@@ -99,11 +99,35 @@ namespace TemplateCoreMaterial.Controllers
     [Route("/api/users/create")]
     public IActionResult Insert([FromBody] UserCreateViewModel model)
     {
+      // validations
+      if (string.IsNullOrWhiteSpace(model.Name))
+      {
+        dynamic expando = new ExpandoObject();
+        expando.message = localizer["The name is a required field"].Value;
+        var json = JsonConvert.SerializeObject(expando);
+        return BadRequest(json);
+      }
+
+      if (string.IsNullOrWhiteSpace(model.UserName))
+      {
+        dynamic expando = new ExpandoObject();
+        expando.message = localizer["The username is a required field"].Value;
+        var json = JsonConvert.SerializeObject(expando);
+        return BadRequest(json);
+      }
+
+      if (string.IsNullOrWhiteSpace(model.Email))
+      {
+        dynamic expando = new ExpandoObject();
+        expando.message = localizer["The email is a required field"].Value;
+        var json = JsonConvert.SerializeObject(expando);
+        return BadRequest(json);
+      }
+
       var usernameExists = this.userService.CanInsertUserName(model.UserName);
       if (!usernameExists)
       {
         dynamic expando = new ExpandoObject();
-        expando.attribute = "username";
         expando.message = localizer["Username already exists"].Value;
         var json = JsonConvert.SerializeObject(expando);
         return BadRequest(json);
@@ -113,7 +137,6 @@ namespace TemplateCoreMaterial.Controllers
       if (!canInsertEmail)
       {
         dynamic expando = new ExpandoObject();
-        expando.attribute = "email";
         expando.message = localizer["Email already exists"].Value;
         var json = JsonConvert.SerializeObject(expando);
         return BadRequest(json);

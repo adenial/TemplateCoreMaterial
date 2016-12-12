@@ -165,6 +165,8 @@
             {
               $('#editdivname').addClass('is-invalid');
             }
+
+            return valid;
           }
           else
           {
@@ -183,7 +185,7 @@
               $('#editdivusername').addClass('is-invalid');
             }
 
-            valid = false;
+            return valid = false;
           }
           else
           {
@@ -213,7 +215,7 @@
               $('#divemail').addClass('is-invalid');
             }
 
-            valid = false;
+            return valid = false;
           }
 
           return valid;
@@ -256,23 +258,15 @@
           var valid = false;
           if (self.name() == null || self.name() === '')
           {
-            //if (!$('#divname').hasClass('is-dirty'))
-            //{
-            //  $('#divname').addClass('is-dirty');
-            //}
-
             if (!$('#divname').hasClass('is-invalid'))
             {
               $('#divname').addClass('is-invalid');
             }
+
+            return valid;
           }
           else
           {
-            //if (!$('#divname').hasClass('is-dirty'))
-            //{
-            //  $('#divname').addClass('is-dirty');
-            //}
-
             if ($('#divname').hasClass('is-invalid'))
             {
               $('#divname').removeClass('is-invalid');
@@ -283,25 +277,15 @@
 
           if (self.username() == null || self.username() === '')
           {
-            //if (!$('#divusername').hasClass('is-dirty'))
-            //{
-            //  $('#divusername').addClass('is-dirty');
-            //}
-
             if (!$('#divusername').hasClass('is-invalid'))
             {
               $('#divusername').addClass('is-invalid');
             }
 
-            valid = false;
+            return valid = false;
           }
           else
           {
-            //if (!$('#divusername').hasClass('is-dirty'))
-            //{
-            //  $('#divusername').addClass('is-dirty');
-            //}
-
             if ($('#divusername').hasClass('is-invalid'))
             {
               $('#divusername').removeClass('is-invalid');
@@ -314,11 +298,6 @@
 
           if (emailValid)
           {
-            //if (!$('#divemail').hasClass('is-dirty'))
-            //{
-            //  $('#divemail').addClass('is-dirty');
-            //}
-
             if ($('#divemail').hasClass('is-invalid'))
             {
               $('#divemail').removeClass('is-invalid');
@@ -328,17 +307,12 @@
           }
           else
           {
-            //if (!$('#divemail').hasClass('is-dirty'))
-            //{
-            //  $('#divemail').addClass('is-dirty');
-            //}
-
             if (!$('#divemail').hasClass('is-invalid'))
             {
               $('#divemail').addClass('is-invalid');
             }
 
-            valid = false;
+            return valid = false;
           }
 
           return valid;
@@ -680,14 +654,7 @@
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 400)
       {
         var json = JSON.parse(xhr.response);
-        if (json.attribute === "username")
-        {
-          message(json.message);
-        }
-        if (json.attribute === "email")
-        {
-          message(json.message);
-        }
+        message(json.message);
         return;
       }
     }
