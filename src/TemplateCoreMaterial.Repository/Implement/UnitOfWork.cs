@@ -8,7 +8,7 @@ namespace TemplateCoreMaterial.Repository
   using System;
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore;
-  using TemplateCoreMaterial.Model;
+  using Model;
 
   /// <summary>
   /// Class UnitOfWork.

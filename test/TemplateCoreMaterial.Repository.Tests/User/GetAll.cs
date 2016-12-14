@@ -12,7 +12,7 @@ namespace TemplateCoreMaterial.Repository.Tests.User
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.DependencyInjection;
-  using TemplateCoreMaterial.Model;
+  using Model;
   using Xunit;
 
   /// <summary>

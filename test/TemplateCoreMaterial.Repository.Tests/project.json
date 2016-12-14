@@ -37,7 +37,7 @@
     //"warningsAsErrors": true,
     "additionalArguments":
     [
-      "/additionalfile:..//..//stylecop.json"
+      //"/additionalfile:..//..//stylecop.json"
     ]
   }
 }

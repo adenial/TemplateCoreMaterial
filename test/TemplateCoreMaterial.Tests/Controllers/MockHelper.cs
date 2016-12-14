@@ -15,7 +15,7 @@ namespace TemplateCoreMaterial.Tests.Controllers
   using Microsoft.Extensions.Logging;
   using Microsoft.Extensions.Options;
   using Moq;
-  using TemplateCoreMaterial.Model;
+  using Model;
 
   /// <summary>
   /// Class MockHelper.

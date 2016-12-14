@@ -10,9 +10,9 @@ namespace TemplateCoreMaterial.Tests.Controllers.Account
   using Microsoft.Extensions.Logging;
   using Moq;
   using TemplateCoreMaterial.Controllers;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Services;
+  using Model;
   using Xunit;
+  using TemplateCoreMaterial.Services;
 
   /// <summary>
   /// Class test that tests the method AccessDenied of the class <see cref="AccountController"/> .

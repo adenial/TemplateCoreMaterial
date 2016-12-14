@@ -8,14 +8,12 @@ namespace TemplateCoreMaterial.Tests.Controllers.User
   using System;
   using System.Collections.Generic;
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-  using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Localization;
   using Moq;
   using TemplateCoreMaterial.Controllers;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Service.Interfaces;
-  using TemplateCoreMaterial.ViewModels.User;
-  using Xunit;
+  using Model;
+  using Service.Interfaces;
+  using ViewModels.User;
 
   /// <summary>
   /// Class test that tests the method Edit of the class <see cref="UserController" />.

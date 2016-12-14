@@ -92,7 +92,7 @@
     "xmlDoc": "true",
     "additionalArguments":
     [
-      "/additionalfile:..//..//stylecop.json"
+      //"/additionalfile:..//..//stylecop.json"
     ],
     //"warningsAsErrors" : true,
     "emitEntryPoint": true,

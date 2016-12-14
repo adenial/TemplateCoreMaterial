@@ -12,7 +12,7 @@ namespace TemplateCoreMaterial.Tests.Controllers.Account
   using Microsoft.AspNetCore.Identity;
   using Microsoft.Extensions.Logging;
   using Microsoft.Extensions.Options;
-  using TemplateCoreMaterial.Model;
+  using Model;
   using Moq;
   using TemplateCoreMaterial.Controllers;
   using TemplateCoreMaterial.Services;

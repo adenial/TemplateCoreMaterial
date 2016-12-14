@@ -13,9 +13,9 @@ namespace TemplateCoreMaterial.Tests.Controllers.Manage
   using Microsoft.Extensions.Logging;
   using Moq;
   using TemplateCoreMaterial.Controllers;
-  using TemplateCoreMaterial.Model;
+  using Model;
   using TemplateCoreMaterial.Services;
-  using TemplateCoreMaterial.ViewModels.Manage;
+  using ViewModels.Manage;
   using Xunit;
 
   /// <summary>

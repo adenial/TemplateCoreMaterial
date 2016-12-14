@@ -8,10 +8,10 @@ namespace TemplateCoreMaterial.Service.Tests.Role
   using System;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.DependencyInjection;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Repository;
-  using TemplateCoreMaterial.Service.Implement;
-  using TemplateCoreMaterial.Service.Interfaces;
+  using Model;
+  using Repository;
+  using Implement;
+  using Interfaces;
   using Xunit;
 
   /// <summary>

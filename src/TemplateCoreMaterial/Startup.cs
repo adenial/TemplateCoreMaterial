@@ -16,11 +16,11 @@ namespace TemplateCoreMaterial
   using Microsoft.Extensions.DependencyInjection;
   using Microsoft.Extensions.Logging;
   using Microsoft.Extensions.Options;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Repository;
-  using TemplateCoreMaterial.Service.Implement;
-  using TemplateCoreMaterial.Service.Interfaces;
-  using TemplateCoreMaterial.Services;
+  using Model;
+  using Repository;
+  using Service.Implement;
+  using Service.Interfaces;
+  using Services;
 
   /// <summary>
   /// Class Startup.

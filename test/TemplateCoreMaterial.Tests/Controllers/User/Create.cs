@@ -12,8 +12,8 @@ namespace TemplateCoreMaterial.Tests.Controllers.User
   using Microsoft.Extensions.Localization;
   using Moq;
   using TemplateCoreMaterial.Controllers;
-  using TemplateCoreMaterial.Service.Interfaces;
-  using TemplateCoreMaterial.ViewModels.User;
+  using Service.Interfaces;
+  using ViewModels.User;
   using Xunit;
 
   /// <summary>

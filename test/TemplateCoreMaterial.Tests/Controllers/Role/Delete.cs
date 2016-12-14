@@ -9,7 +9,7 @@ namespace TemplateCoreMaterial.Tests.Controllers.Role
   using Microsoft.Extensions.Localization;
   using Moq;
   using TemplateCoreMaterial.Controllers;
-  using TemplateCoreMaterial.Service.Interfaces;
+  using Service.Interfaces;
   using Xunit;
 
   /// <summary>

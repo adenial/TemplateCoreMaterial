@@ -7,7 +7,7 @@ namespace TemplateCoreMaterial.Service.Interfaces
 {
   using System.Collections.Generic;
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-  using TemplateCoreMaterial.Model;
+  using Model;
 
   /// <summary>
   /// Interface IUserService

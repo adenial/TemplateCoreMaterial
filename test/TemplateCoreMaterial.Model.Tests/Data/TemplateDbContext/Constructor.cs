@@ -3,7 +3,7 @@
 /// </summary>
 namespace TemplateCoreMaterial.Model.Tests.DbContext
 {
-  using TemplateCoreMaterial.Model;
+  using Model;
   using Xunit;
 
   /// <summary>

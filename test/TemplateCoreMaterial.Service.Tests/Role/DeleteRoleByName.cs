@@ -10,10 +10,10 @@ namespace TemplateCoreMaterial.Service.Tests.Role
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.DependencyInjection;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Repository;
-  using TemplateCoreMaterial.Service.Implement;
-  using TemplateCoreMaterial.Service.Interfaces;
+  using Model;
+  using Repository;
+  using Implement;
+  using Interfaces;
   using Xunit;
 
   /// <summary>
@@ -23,7 +23,7 @@ namespace TemplateCoreMaterial.Service.Tests.Role
   {
     /// <summary>
     /// The context options
-    /// </summary>
+    /// </summary>D:\Users\Rolando\Source\Repos\TemplateCoreMaterial\test\TemplateCoreMaterial.Service.Tests\Role\DeleteRoleByName.cs
     private DbContextOptions<TemplateDbContext> contextOptions;
 
     /// <summary>

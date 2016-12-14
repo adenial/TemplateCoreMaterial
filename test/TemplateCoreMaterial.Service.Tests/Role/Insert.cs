@@ -9,10 +9,10 @@ namespace TemplateCoreMaterial.Service.Tests.Role
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.DependencyInjection;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Repository;
-  using TemplateCoreMaterial.Service.Implement;
-  using TemplateCoreMaterial.Service.Interfaces;
+  using Model;
+  using Repository;
+  using Implement;
+  using Interfaces;
   using Xunit;
   using System.Collections.Generic;
   using System.Security.Claims;

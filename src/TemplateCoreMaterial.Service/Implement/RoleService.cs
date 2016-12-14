@@ -10,9 +10,9 @@ namespace TemplateCoreMaterial.Service.Implement
   using System.Linq;
   using System.Security.Claims;
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Repository;
-  using TemplateCoreMaterial.Service.Interfaces;
+  using Model;
+  using Repository;
+  using Interfaces;
 
   /// <summary>
   /// Class RoleService.

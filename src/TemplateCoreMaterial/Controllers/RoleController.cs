@@ -12,8 +12,8 @@ namespace TemplateCoreMaterial.Controllers
   using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Localization;
-  using TemplateCoreMaterial.Service.Interfaces;
-  using TemplateCoreMaterial.ViewModels.Role;
+  using Service.Interfaces;
+  using ViewModels.Role;
 
   /// <summary>
   /// Class RoleController.

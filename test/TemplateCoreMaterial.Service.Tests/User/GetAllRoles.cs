@@ -3,16 +3,16 @@
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace TemplateCore.Service.Tests.User
+namespace TemplateCoreMaterial.Service.Tests.User
 {
   using System.Collections.Generic;
   using System.Linq;
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.DependencyInjection;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Repository;
-  using TemplateCoreMaterial.Service.Implement;
+  using Model;
+  using Repository;
+  using Implement;
   using Xunit;
 
   /// <summary>

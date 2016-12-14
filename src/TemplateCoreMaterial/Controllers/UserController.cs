@@ -12,9 +12,9 @@ namespace TemplateCoreMaterial.Controllers
   using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Localization;
-  using TemplateCoreMaterial.Model;
-  using TemplateCoreMaterial.Service.Interfaces;
-  using TemplateCoreMaterial.ViewModels.User;
+  using Model;
+  using Service.Interfaces;
+  using ViewModels.User;
   using System.Dynamic;
   using Newtonsoft.Json;
 
