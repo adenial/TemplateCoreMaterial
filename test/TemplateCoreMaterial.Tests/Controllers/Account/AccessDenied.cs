@@ -8,11 +8,11 @@ namespace TemplateCoreMaterial.Tests.Controllers.Account
   using Microsoft.AspNetCore.Identity;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
+  using Model;
   using Moq;
   using TemplateCoreMaterial.Controllers;
-  using Model;
-  using Xunit;
   using TemplateCoreMaterial.Services;
+  using Xunit;
 
   /// <summary>
   /// Class test that tests the method AccessDenied of the class <see cref="AccountController"/> .
